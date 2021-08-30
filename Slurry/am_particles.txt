@@ -1,0 +1,45 @@
+###Diameters
+
+##Active Material
+
+# Loop to assign diameters of each type 
+label loop
+variable i loop ${nAM_part}
+variable d_e_a$i equal v_d_e_$i
+
+# diameters of the particles
+# variable d_a$i equal v_coef_exp*v_d_e_a$i
+
+next i
+jump am_particles.txt loop
+
+print "d_e_1: ${d_e_a1} " screen yes
+
+if '${nAM_eff} >= 2' then &
+'print "d_e_2: ${d_e_a2} " screen yes'
+
+if '${nAM_eff} >= 3' then &
+'print "d_e_3: ${d_e_a3} " screen yes'
+
+if '${nAM_eff} >= 4' then &
+'print "d_e_4: ${d_e_a4} " screen yes'
+
+if '${nAM_eff} >= 5' then &
+'print "d_e_5: ${d_e_a5} " screen yes'
+
+if '${nAM_eff} >= 6' then &
+'print "d_e_6: ${d_e_a6} " screen yes'
+
+if '${nAM_eff} >= 7' then &
+'print "d_e_7: ${d_e_a7} " screen yes'
+
+if '${nAM_eff} >= 8' then &
+'print "d_e_8: ${d_e_a8} " screen yes'
+
+if '${nAM_eff} >= 9' then &
+'print "d_e_9: ${d_e_a9} " screen yes'
+
+if '${nAM_eff} >= 10' then &
+'print "d_e_10: ${d_e_a10} " screen yes'
+
+

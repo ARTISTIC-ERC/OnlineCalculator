@@ -1,0 +1,296 @@
+#Slurry : Active materials (NMC) + Carbon Binder Domain(CBD) (PVDF + Carbon black)
+
+atom_modify map array
+units           micro
+dimension       3
+atom_style      sphere
+boundary        p p f
+read_data coord_out_slurry_CBDs.data
+group CBD_ini type 1 2 3 
+variable n_CBD_ini equal count(CBD_ini)
+print "n_CBD_ini equal ${n_CBD_ini}" screen yes
+
+include user_inputs.txt
+include am_particles.txt
+
+variable d_cb_sol equal v_d_cb
+print ${d_cb_sol} file d_cb_sol
+
+variable a_max equal 1000
+label loop
+variable a loop ${a_max}
+comm_modify vel yes
+
+print "loop1 --> a = ${a}" screen yes
+
+if "${a} > 1" then &
+"atom_modify map array"
+
+if "${a} > 1" then &
+"boundary        p p f"
+
+if "${a} > 1" then &
+"read_restart restart.*"
+
+include user_inputs_evHet.txt
+
+variable pi equal 3.1415926
+
+if '${a} >1' then &
+'print "Porosity equal ${Porosity}" screen yes'
+
+variable freeze_par equal 0.8
+variable freeze_point equal round(v_a_max*v_freeze_par)
+print "freeze_point = ${freeze_point}"
+
+if "${a} > ${freeze_point}" then &
+"print 'freezed at a = ${a}' screen yes"
+
+include FFs_parameters.txt
+
+variable particles equal count(all)
+print "particles equal ${particles}" screen yes
+
+variable z_max equal bound(all,zmax)
+
+variable lz_particle_final equal v_z_max-zlo
+print "lz_particle_final equal ${lz_particle_final}" screen yes
+
+variable n_zones file n_zones
+variable l1z equal (v_lz_particle_final/v_n_zones)+zlo
+
+if "${n_zones} == 1" then &
+"variable l1z equal 100000"
+if "${n_zones} == 1" then &
+"variable l2z equal 100000"
+if "${n_zones} == 2" then &
+"variable l2z equal 100000"
+if "${n_zones} == 3" then &
+"variable l2z equal ((2/3)*v_lz_particle_final)+zlo"
+
+label loop1
+variable i loop 1 ${particles}
+variable z_position_i equal z[${i}]
+variable type_i equal type[${i}]
+
+if "${z_position_i} > ${l2z} && ${type_i} <= 3 " then &
+"set atom ${i} type 3 diameter ${d_cb3}  density ${Rho_cb3}"
+
+if "${z_position_i} <= ${l1z} && ${type_i} <= 3 " then &
+"set atom ${i} type 1 diameter ${d_cb1}  density ${Rho_cb1}"
+
+if "${z_position_i} > ${l1z} && ${z_position_i} <= ${l2z} && ${type_i} <= 3 " then &
+"set atom ${i} type 2 diameter ${d_cb2}  density ${Rho_cb2}"
+
+next i
+jump in_evaporation_freeze.run loop1
+
+
+set type 4 diameter ${d_a1}  density ${Rho_AM}
+set type 5 diameter ${d_a2}  density ${Rho_AM}
+set type 6 diameter ${d_a3}  density ${Rho_AM}
+set type 7 diameter ${d_a4}  density ${Rho_AM}
+set type 8 diameter ${d_a5}  density ${Rho_AM}
+set type 9 diameter ${d_a6}  density ${Rho_AM}
+set type 10 diameter ${d_a7}  density ${Rho_AM}
+set type 11 diameter ${d_a8}  density ${Rho_AM}
+set type 12 diameter ${d_a9}  density ${Rho_AM}
+set type 13 diameter ${d_a10}  density ${Rho_AM}
+
+neighbor        2.0 bin
+neigh_modify check yes one 15000 page 150000
+
+#Groups
+group CBD type 1 2 3
+group CBD1 type 1
+group CBD2 type 2
+group CBD3 type 3
+group AM1 type 4
+group AM2 type 5
+group AM3 type 6
+group AM4 type 7
+group AM5 type 8
+group AM6 type 9
+group AM7 type 10
+group AM8 type 11
+group AM9 type 12
+group AM10 type 13
+
+#Surfaces
+variable surface_CBD1 equal 0.25*v_pi*(v_d_cb_sol^2)
+variable surface_CBD2 equal 0.25*v_pi*(v_d_cb_sol^2)
+variable surface_CBD3 equal 0.25*v_pi*(v_d_cb_sol^2)
+variable surface_AM1 equal 0.25*v_pi*(v_d_e_a1^2)
+variable surface_AM2 equal 0.25*v_pi*(v_d_e_a2^2)
+variable surface_AM3 equal 0.25*v_pi*(v_d_e_a3^2)
+variable surface_AM4 equal 0.25*v_pi*(v_d_e_a4^2)
+variable surface_AM5 equal 0.25*v_pi*(v_d_e_a5^2)
+variable surface_AM6 equal 0.25*v_pi*(v_d_e_a6^2)
+variable surface_AM7 equal 0.25*v_pi*(v_d_e_a7^2)
+variable surface_AM8 equal 0.25*v_pi*(v_d_e_a8^2)
+variable surface_AM9 equal 0.25*v_pi*(v_d_e_a9^2)
+variable surface_AM10 equal 0.25*v_pi*(v_d_e_a10^2)
+
+# Remaining solvent
+variable n_CBD1 equal count(CBD1)
+variable n_CBD2 equal count(CBD2)
+variable n_CBD3 equal count(CBD3)
+variable volume_CBD1 equal v_n_CBD1*v_pi*(v_d_cb1^3)/6
+variable volume_CBD2 equal v_n_CBD2*v_pi*(v_d_cb2^3)/6
+variable volume_CBD3 equal v_n_CBD2*v_pi*(v_d_cb3^3)/6
+
+variable volume_CBD equal v_volume_CBD1+v_volume_CBD2+v_volume_CBD3
+
+# Overall masses and volumes
+variable mass_AM equal v_ratio_AM*v_dry_mass # gram
+variable volume_AM equal 1E+12*v_mass_AM/v_Rho_AM # micro meter 3
+variable mass_CBD equal v_ratio_CBD*v_dry_mass # gram
+variable volume_CBD equal 1E+12*v_mass_CBD/v_Rho_cb # micro meter 3
+
+variable volume_solid equal v_volume_AM+v_volume_CBD # micro meter 3
+print "volume_solid = ${volume_solid}" screen yes
+
+# To update with the previous ones
+variable Box_Volume equal lx*ly*v_lz_particle_final*1E-12 # cm3
+variable Porosity equal ((lx*ly*v_lz_particle_final)-v_volume_solid)/(lx*ly*v_lz_particle_final) # This is just a rough approximation
+variable mass_electrode_g equal v_dry_mass # gram
+variable Density equal v_mass_electrode_g/v_Box_Volume # gram cm-3
+variable mass_AM_mg equal v_mass_AM*1E3 # mg
+variable electrode_surf_cm2 equal lx*ly*1E-8 # cm2
+variable mass_load equal v_mass_AM_mg/v_electrode_surf_cm2 # mg cm-2
+
+print "Porosity, loading and Density = ${Porosity}, ${mass_load} and ${Density}" screen yes
+
+# AM-CBD pair parameters
+
+pair_style     hybrid/overlay lj/sf ${rc_a6} &
+               gran/hertz/history  ${Kn} ${Kt} ${Gamman} ${Gammat} ${Xu} 1 
+
+include pair_coeff_ev.txt
+
+variable added_dist equal 1
+variable plane_z_up equal zhi+v_added_dist
+variable plane_z_down equal zlo-v_added_dist
+if "${a} == 1" then &
+"print 'plane_z_up equal ${plane_z_up}' screen yes"
+if "${a} == 1" then &
+"print 'plane_z_down equal ${plane_z_down}' screen yes"
+#Planes
+fix wall all wall/gran hertz/history 150000 NULL 30 NULL 15 1 zplane ${plane_z_down} ${plane_z_up}
+
+timestep        0.0001
+
+thermo 10000
+compute mytemp all temp/sphere
+compute mypress all pressure mytemp
+compute ke_rot all erotate/sphere
+
+
+thermo_style    custom step temp c_mytemp pe ke c_ke_rot press pzz c_mypress vol lx ly lz 
+thermo_modify lost ignore
+
+dump 1  all custom 500000 dump.com_*.atom id type x y z radius
+
+## --------------------- Relaxation --------------------------------- ##
+min_style cg
+
+label loop_min
+variable l loop 8 20
+variable min_check equal v_l*5
+if "${a} == ${min_check}" then "minimize 1e-18 1e-18 5000000 1000000"
+next l
+jump in_evaporation_freeze.run loop_min
+## --------------------- Dynamics ----------------------------------- ##
+
+if "${a} <= ${freeze_point}" then &
+"fix NVT all nvt/sphere temp 298.15 353.15 0.7"
+if "${a} > ${freeze_point}" then &
+"fix NVT all nvt/sphere temp 353.15 355 0.3"
+
+
+variable run equal 100000
+variable output_time equal (v_a*v_run)
+
+include press-grav.txt
+
+run ${run}
+
+write_restart restart.*
+
+if "${a} == ${a_max}" then &
+"set type 4 diameter ${d_e_1}"
+if "${a} == ${a_max}" then &
+"set type 5 diameter ${d_e_2}"
+if "${a} == ${a_max}" then &
+"set type 6 diameter ${d_e_3}"
+if "${a} == ${a_max}" then &
+"set type 7 diameter ${d_e_4}"
+if "${a} == ${a_max}" then &
+"set type 8 diameter ${d_e_5}"
+if "${a} == ${a_max}" then &
+"set type 9 diameter ${d_e_6}"
+if "${a} == ${a_max}" then &
+"set type 10 diameter ${d_e_7}"
+if "${a} == ${a_max}" then &
+"set type 11 diameter ${d_e_8}"
+if "${a} == ${a_max}" then &
+"set type 12 diameter ${d_e_9}"
+if "${a} == ${a_max}" then &
+"set type 13 diameter ${d_e_10}"
+if "${a} == ${a_max}" then &
+"write_data coord_out_dried-electrode.data"
+if "${a} == ${a_max}" then &
+"write_dump all custom Dried_electrode.atom id type x y z radius"
+if "${a} == ${a_max}" then &
+"print ${mass_load} file AM_loading.out"
+
+unfix NVT
+
+group CBD delete
+group CBD1 delete
+group CBD2 delete
+group CBD3 delete
+group AM1 delete
+group AM2 delete
+group AM3 delete
+group AM4 delete
+group AM5 delete
+group AM6 delete
+group AM7 delete
+group AM8 delete
+group AM9 delete
+group AM10 delete
+
+if "${a} < ${a_max}" then "clear"
+
+next a
+jump in_evaporation_freeze.run loop
+
+fix NVT all nvt/sphere temp 353.15 355 0.3
+
+variable run equal 500000
+
+run ${run}
+
+write_restart restart.*
+
+group CBD type 1 2 3
+
+set group CBD type 1
+set type 4 diameter ${d_e_1}
+set type 5 diameter ${d_e_2}
+set type 6 diameter ${d_e_3}
+set type 7 diameter ${d_e_4}
+set type 8 diameter ${d_e_5}
+set type 9 diameter ${d_e_6}
+set type 10 diameter ${d_e_7}
+set type 11 diameter ${d_e_8}
+set type 12 diameter ${d_e_9}
+set type 13 diameter ${d_e_10}
+write_data coord_out_electrode.data
+write_dump all custom Dried_electrode.atom id type x y z radius
+print ${mass_load} file AM_loading.out
+
+# --------------------End of Simulation- ----------------------------- #
+  
+

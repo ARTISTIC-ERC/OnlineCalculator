@@ -1,0 +1,180 @@
+# Particles parameters
+#Active Material
+include user_inputs.txt
+include am_particles.txt
+# LJ potential
+if "${a} <= ${freeze_point}" then &
+"variable    epsi_am_fin equal 100"
+if "${a} > ${freeze_point}" then &
+"variable    epsi_am_fin equal 500"
+variable    epsi_am_ini file epsi_AM
+variable    epsi_pre_am equal v_epsi_am_ini+((v_a/v_a_max)*(v_epsi_am_fin-v_epsi_am_ini))
+print "epsi_pre_am = ${epsi_pre_am}" screen yes
+print ${epsi_pre_am} file epsi_AM_sol
+
+if "${a} <= ${freeze_point}" then &
+"variable    sig_am_fin equal 0.89"
+if "${a} > ${freeze_point}" then &
+"variable    sig_am_fin equal 0.89"
+variable    sig_am_ini file sig_AM
+variable    sig_pre_am equal v_sig_am_ini+((v_a/v_a_max)*(v_sig_am_fin-v_sig_am_ini))
+print "sig_pre_am = ${sig_pre_am}" screen yes
+print ${sig_pre_am} file sig_AM_sol
+
+variable rc_AM equal 1.2
+print ${rc_AM} file rc_AM_sol
+
+if "${a} <= ${freeze_point}" then &
+"variable    exp_par_fin equal 1.02"
+if "${a} > ${freeze_point}" then &
+"variable    exp_par_fin equal 1.02"
+variable    exp_par_ini file exp_par
+variable    exp_par equal v_exp_par_ini+((v_a/v_a_max)*(v_exp_par_fin-v_exp_par_ini))
+print "exp_par = ${exp_par}" screen yes
+print ${exp_par} file exp_par_sol
+
+label loop
+variable i loop ${nAM_part}
+variable    epsi_a$i equal v_epsi_pre_am*(v_d_e_a$i)
+variable    sig_a$i equal v_sig_pre_am*v_d_e_a$i
+variable    rc_a$i equal v_rc_AM*v_d_e_a$i
+variable d_a$i equal v_exp_par*v_d_e_a$i
+
+next i
+jump FFs_parameters.txt loop
+
+#CBD
+variable d_cb_ini file d_cb_liq
+variable d_cb_sol file d_cb_sol
+variable epsi_factor_ini file epsi_cb_pre
+
+variable    d_cb1_fin equal v_d_cb_sol
+variable    d_cb1_ini equal v_d_cb_ini
+variable    d_cb1 equal v_d_cb1_ini+((v_a/v_a_max)*v_evap_rate1*(v_d_cb1_fin-v_d_cb1_ini))
+if "${d_cb1} < ${d_cb1_fin}" then &
+"variable d_cb1 equal v_d_cb1_fin"
+print "d_cb1 = ${d_cb1}" screen yes
+
+if "${a} <= ${freeze_point}" then &
+"variable    epsi_factor1_fin equal 150"
+if "${a} > ${freeze_point}" then &
+"variable    epsi_factor1_fin equal 650"
+variable    epsi_factor1_ini equal v_epsi_factor_ini
+variable    epsi_factor1 equal v_epsi_factor1_ini+((v_a/v_a_max)*v_evap_rate1*(v_epsi_factor1_fin-v_epsi_factor1_ini))
+if "${epsi_factor1} > ${epsi_factor1_fin}" then &
+"variable epsi_factor1 equal v_epsi_factor1_fin"
+variable    epsi_cb1 equal v_epsi_factor1*v_d_cb1
+print "epsi_factor1 = ${epsi_factor1}" screen yes
+print ${epsi_factor1_fin} file epsi_cb_pre_sol
+
+variable    d_cb2_fin equal v_d_cb_sol
+variable    d_cb2_ini equal v_d_cb_ini
+variable    d_cb2 equal v_d_cb2_ini+((v_a/v_a_max)*v_evap_rate2*(v_d_cb2_fin-v_d_cb2_ini))
+if "${d_cb2} < ${d_cb2_fin}" then &
+"variable d_cb2 equal v_d_cb2_fin"
+print "d_cb2 = ${d_cb2}" screen yes
+
+if "${a} <= ${freeze_point}" then &
+"variable    epsi_factor2_fin equal 150"
+if "${a} > ${freeze_point}" then &
+"variable    epsi_factor2_fin equal 650"
+variable    epsi_factor2_ini equal v_epsi_factor_ini
+variable    epsi_factor2 equal v_epsi_factor2_ini+((v_a/v_a_max)*v_evap_rate2*(v_epsi_factor2_fin-v_epsi_factor2_ini))
+if "${epsi_factor2} > ${epsi_factor2_fin}" then &
+"variable epsi_factor2 equal v_epsi_factor2_fin"
+variable    epsi_cb2 equal v_epsi_factor2*v_d_cb2
+print "epsi_factor2 = ${epsi_factor2}" screen yes
+
+variable    d_cb3_fin equal v_d_cb_sol
+variable    d_cb3_ini equal v_d_cb_ini
+variable    d_cb3 equal v_d_cb3_ini+((v_a/v_a_max)*v_evap_rate3*(v_d_cb3_fin-v_d_cb3_ini))
+if "${d_cb3} < ${d_cb3_fin}" then &
+"variable d_cb3 equal v_d_cb3_fin"
+print "d_cb3 = ${d_cb3}" screen yes
+
+if "${a} <= ${freeze_point}" then &
+"variable    epsi_factor3_fin equal 150"
+if "${a} > ${freeze_point}" then &
+"variable    epsi_factor3_fin equal 650"
+variable    epsi_factor3_ini equal v_epsi_factor_ini
+variable    epsi_factor3 equal v_epsi_factor3_ini+((v_a/v_a_max)*v_evap_rate3*(v_epsi_factor3_fin-v_epsi_factor3_ini))
+if "${epsi_factor3} > ${epsi_factor3_fin}" then &
+"variable epsi_factor3 equal v_epsi_factor3_fin"
+variable    epsi_cb3 equal v_epsi_factor3*v_d_cb3
+print "epsi_factor3 = ${epsi_factor3}" screen yes
+
+variable    sig_cb equal 0.89*v_d_cb_sol
+print ${sig_cb} file sig_cb_sol
+variable    rc_cb  equal 2.2
+print ${rc_cb} file rc_cb_sol
+
+# GH potential
+variable Rho_cb_fin equal v_Rho_cb
+
+variable    Rho_cb1_fin equal v_Rho_cb_fin
+variable    Rho_cb1_ini equal v_Rho_cb_liq
+variable    Rho_cb1 equal v_Rho_cb1_ini+((v_a/v_a_max)*v_evap_rate1*(v_Rho_cb1_fin-v_Rho_cb1_ini))
+if "${Rho_cb1} > ${Rho_cb1_fin}" then &
+"variable Rho_cb1 equal v_Rho_cb1_fin"
+print "Rho_cb1 = ${Rho_cb1}" screen yes
+
+variable    Rho_cb2_fin equal v_Rho_cb_fin
+variable    Rho_cb2_ini equal v_Rho_cb_liq
+variable    Rho_cb2 equal v_Rho_cb2_ini+((v_a/v_a_max)*v_evap_rate2*(v_Rho_cb2_fin-v_Rho_cb2_ini))
+if "${Rho_cb2} > ${Rho_cb2_fin}" then &
+"variable Rho_cb2 equal v_Rho_cb2_fin"
+print "Rho_cb2 = ${Rho_cb2}" screen yes
+
+variable    Rho_cb3_fin equal v_Rho_cb_fin
+variable    Rho_cb3_ini equal v_Rho_cb_liq
+variable    Rho_cb3 equal v_Rho_cb3_ini+((v_a/v_a_max)*v_evap_rate3*(v_Rho_cb3_fin-v_Rho_cb3_ini))
+if "${Rho_cb3} > ${Rho_cb3_fin}" then &
+"variable Rho_cb3 equal v_Rho_cb3_fin"
+print "Rho_cb3 = ${Rho_cb3}" screen yes
+
+if "${a} <= ${freeze_point}" then &
+"variable    Kn_fin equal 401.6"
+if "${a} > ${freeze_point}" then &
+"variable    Kn_fin equal 950"
+variable    Kn_ini file Kn
+variable    Kn equal v_Kn_ini+((v_a/v_a_max)*(v_Kn_fin-v_Kn_ini))
+print "Kn = ${Kn}" screen yes
+print ${Kn} file Kn_sol
+
+if "${a} <= ${freeze_point}" then &
+"variable    KtKn_fin equal 1.263835294"
+if "${a} > ${freeze_point}" then &
+"variable    KtKn_fin equal 1.235294118"
+variable    KtKn_ini file KtKn
+variable    KtKn equal v_KtKn_ini+((v_a/v_a_max)*(v_KtKn_fin-v_KtKn_ini))
+variable    Kt equal v_KtKn*v_Kn
+print "Kt = ${Kt}" screen yes
+print ${KtKn} file KtKn_sol
+
+if "${a} <= ${freeze_point}" then &
+"variable    Gamman_fin equal 15.6"
+if "${a} > ${freeze_point}" then &
+"variable    Gamman_fin equal 10"
+variable    Gamman_ini file Gamman
+variable    Gamman equal v_Gamman_ini+((v_a/v_a_max)*(v_Gamman_fin-v_Gamman_ini))
+print "Gamman = ${Gamman}" screen yes
+print ${Gamman} file Gamman_sol
+
+if "${a} <= ${freeze_point}" then &
+"variable    GammatGamman_fin equal 0.91778817"
+if "${a} > ${freeze_point}" then &
+"variable    GammatGamman_fin equal 0.907485213"
+variable    GammatGamman_ini file GammatGamman
+variable    GammatGamman equal v_GammatGamman_ini+((v_a/v_a_max)*(v_GammatGamman_fin-v_GammatGamman_ini))
+variable    Gammat equal v_GammatGamman*v_Gamman
+print "Gammat = ${Gammat}" screen yes
+print ${GammatGamman} file GammatGamman_sol
+
+if "${a} <= ${freeze_point}" then &
+"variable    Xu_fin equal 12"
+if "${a} > ${freeze_point}" then &
+"variable    Xu_fin equal 15"
+variable    Xu_ini file Xu
+variable    Xu equal v_Xu_ini+((v_a/v_a_max)*(v_Xu_fin-v_Xu_ini))
+print "Xu = ${Xu}" screen yes
+print ${Xu} file Xu_sol

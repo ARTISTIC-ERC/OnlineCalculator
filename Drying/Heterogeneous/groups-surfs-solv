@@ -1,0 +1,41 @@
+#Groups
+group CBD type 1 2 3
+group CBD1 type 1
+group CBD2 type 2
+group CBD3 type 3
+group AM1 type 4
+group AM2 type 5
+group AM3 type 6
+group AM4 type 7
+group AM5 type 8
+group AM6 type 9
+group AM7 type 10
+group AM8 type 11
+group AM9 type 12
+group AM10 type 13
+
+#Surfaces
+variable surface_CBD1 equal 0.25*v_pi*(v_d_cb1_fin^2)
+variable surface_CBD2 equal 0.25*v_pi*(v_d_cb2_fin^2)
+variable surface_CBD3 equal 0.25*v_pi*(v_d_cb3_fin^2)
+variable surface_AM1 equal 0.25*v_pi*(v_d_e_a1^2)
+variable surface_AM2 equal 0.25*v_pi*(v_d_e_a2^2)
+variable surface_AM3 equal 0.25*v_pi*(v_d_e_a3^2)
+variable surface_AM4 equal 0.25*v_pi*(v_d_e_a4^2)
+variable surface_AM5 equal 0.25*v_pi*(v_d_e_a5^2)
+variable surface_AM6 equal 0.25*v_pi*(v_d_e_a6^2)
+variable surface_AM7 equal 0.25*v_pi*(v_d_e_a7^2)
+variable surface_AM8 equal 0.25*v_pi*(v_d_e_a8^2)
+variable surface_AM9 equal 0.25*v_pi*(v_d_e_a9^2)
+variable surface_AM10 equal 0.25*v_pi*(v_d_e_a10^2)
+
+# Remaining solvent
+variable n_CBD1 equal count(CBD1)
+variable n_CBD2 equal count(CBD2)
+variable n_CBD3 equal count(CBD3)
+variable volume_CBD1 equal v_n_CBD1*v_pi*(v_d_cb1^3)/6
+variable volume_CBD2 equal v_n_CBD2*v_pi*(v_d_cb2^3)/6
+variable volume_CBD3 equal v_n_CBD2*v_pi*(v_d_cb3^3)/6
+
+variable volume_CBD equal v_volume_CBD1+v_volume_CBD2+v_volume_CBD3
+

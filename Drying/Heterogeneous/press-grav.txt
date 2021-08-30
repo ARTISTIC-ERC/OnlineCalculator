@@ -1,0 +1,50 @@
+variable atmospheric_pressure_Pa equal 101325
+variable Force_atm_max equal v_atmospheric_pressure_Pa*(lx*ly*1E-3)*(-1)
+print "Force_atm_max equal ${Force_atm_max}" screen yes
+
+variable n_CBD1 equal count(CBD1)
+variable n_CBD2 equal count(CBD2)
+variable n_CBD3 equal count(CBD3)
+
+label loop1
+variable i loop 1 ${nAM_part}
+variable n_AM$i equal count(AM$i)
+next i
+jump press-grav.txt loop1
+variable i delete
+
+print "Count AMs ${n_AM1}, ${n_AM2}, ${n_AM3}, ${n_AM4}, ${n_AM5}, ${n_AM6}, ${n_AM7}, ${n_AM8}, ${n_AM9}, ${n_AM10}" screen yes
+
+variable Surface_total_CBD1 equal v_n_CBD1*v_surface_CBD1
+variable Surface_total_CBD2 equal v_n_CBD2*v_surface_CBD2
+variable Surface_total_CBD3 equal v_n_CBD3*v_surface_CBD3
+
+label loop2
+variable i loop 1 ${nAM_part}
+variable Surface_total_AM$i equal v_n_AM$i*v_surface_AM$i
+next i
+jump press-grav.txt loop2
+variable i delete
+
+variable Surface_total_CBDs equal v_n_CBD_ini*v_surface_CBD3
+variable Surface_total_AM1s equal v_Surface_total_AM1+v_Surface_total_AM2+v_Surface_total_AM3+v_Surface_total_AM4+v_Surface_total_AM5
+variable Surface_total_AM2s equal v_Surface_total_AM6+v_Surface_total_AM7+v_Surface_total_AM8+v_Surface_total_AM9+v_Surface_total_AM10
+variable Surface_total_AMs equal v_Surface_total_AM1s+v_Surface_total_AM2s
+
+variable Surface_total equal v_Surface_total_CBDs+v_Surface_total_AMs
+
+variable Force_atm_CBD1 equal v_Force_atm_max*(v_surface_CBD1/v_Surface_total)
+variable Force_atm_CBD2 equal v_Force_atm_max*(v_surface_CBD2/v_Surface_total)
+variable Force_atm_CBD3 equal v_Force_atm_max*(v_surface_CBD3/v_Surface_total)
+
+
+label loop3
+variable i loop 1 ${nAM_part}
+variable Force_atm_AM$i equal v_Force_atm_max*(v_surface_AM$i/v_Surface_total)
+next i
+jump press-grav.txt loop3
+variable i delete
+
+variable gravity equal 1
+fix grav all gravity v_gravity vector 0 0 -1
+

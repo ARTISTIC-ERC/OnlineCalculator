@@ -1,0 +1,175 @@
+atom_modify map array
+units           micro
+dimension       3
+atom_style      sphere
+boundary        p p m
+read_data coord_out_slurry.data extra/atom/types 2
+
+variable d_cb_liq file d_cb_liq
+
+include user_inputs.txt
+include am_particles.txt
+include force_fields_parameters.txt
+
+set type 1 diameter ${d_cb_liq}  density ${Rho_cb_liq} # CBD liq 0.1 pg/µm3
+set type 2 diameter ${d_e_a1}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 3 diameter ${d_e_a2}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 4 diameter ${d_e_a3}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 5 diameter ${d_e_a4}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 6 diameter ${d_e_a5}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 7 diameter ${d_e_a6}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 8 diameter ${d_e_a7}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 9 diameter ${d_e_a8}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 10 diameter ${d_e_a9}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 11 diameter ${d_e_a10}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+
+#Groups 
+group CBD type 1
+group AM1 type 2
+group AM2 type 3
+group AM3 type 4
+group AM4 type 5
+group AM5 type 6
+group AM6 type 7
+group AM7 type 8
+group AM8 type 9
+group AM9 type 10
+group AM10 type 11
+
+#Masses
+variable mass_CBD equal mass(CBD)/count(CBD)
+variable mass_AM1 equal mass(AM1)/count(AM1)
+variable mass_AM2 equal mass(AM2)/count(AM2)
+variable mass_AM3 equal mass(AM3)/count(AM3)
+variable mass_AM4 equal mass(AM4)/count(AM4)
+variable mass_AM5 equal mass(AM5)/count(AM5)
+variable mass_AM6 equal mass(AM6)/count(AM6)
+variable mass_AM7 equal mass(AM7)/count(AM7)
+variable mass_AM8 equal mass(AM8)/count(AM8)
+variable mass_AM9 equal mass(AM9)/count(AM9)
+variable mass_AM10 equal mass(AM10)/count(AM10)
+
+#Counts
+variable count_AM1 equal count(AM1)
+variable count_AM2 equal count(AM2)
+variable count_AM3 equal count(AM3)
+variable count_AM4 equal count(AM4)
+variable count_AM5 equal count(AM5)
+variable count_AM6 equal count(AM6)
+variable count_AM7 equal count(AM7)
+variable count_AM8 equal count(AM8)
+variable count_AM9 equal count(AM9)
+variable count_AM10 equal count(AM10)
+
+variable safety_limit equal 10
+label loop
+variable i loop ${nAM_part}
+variable mass_safe_AM$i equal v_mass_AM$i-v_safety_limit
+
+next i
+jump CBDs.txt loop
+
+# To do the separation between 2 and 3 zones also here ??
+variable l1z equal (lz/3)+zlo
+variable l2z equal ((2/3)*lz)+zlo
+print "l1z = ${l1z}" screen yes
+print "l2z = ${l2z}" screen yes
+
+variable particles equal count(all)
+
+label loop1
+variable i loop 1 ${particles}
+variable z_position_i equal z[${i}]
+variable type_i equal type[${i}]
+variable mass_i equal mass[${i}]
+
+if "${z_position_i} > ${l2z} && ${type_i} == 1 " then &
+"set atom ${i} type 3 diameter ${d_cb_liq}  density ${Rho_cb_liq}"
+
+if "${z_position_i} <= ${l1z} && ${type_i} == 1 " then &
+"set atom ${i} type 1 diameter ${d_cb_liq}  density ${Rho_cb_liq}"
+
+if "${z_position_i} > ${l1z} && ${z_position_i} <= ${l2z} && ${type_i} == 1 " then &
+"set atom ${i} type 2 diameter ${d_cb_liq}  density ${Rho_cb_liq}"
+
+if '${count_AM1} > 0 && ${count_AM2} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM1} && ${mass_i} < ${mass_safe_AM2} && ${type_i} > 1" then &
+"set atom ${i} type 4 diameter ${d_e_a1}  density ${Rho_AM}"'
+
+if '${count_AM1} > 0 && ${count_AM2} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM1} && ${type_i} > 1" then &
+"set atom ${i} type 4 diameter ${d_e_a1}  density ${Rho_AM}"'
+
+if '${count_AM2} > 0 && ${count_AM3} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM2} && ${mass_i} < ${mass_safe_AM3} && ${type_i} > 1" then &
+"set atom ${i} type 5 diameter ${d_e_a2}  density ${Rho_AM}"'
+
+if '${count_AM2} > 0 && ${count_AM3} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM2} && ${type_i} > 1" then &
+"set atom ${i} type 5 diameter ${d_e_a2}  density ${Rho_AM}"'
+
+if '${count_AM3} > 0 && ${count_AM4} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM3} && ${mass_i} < ${mass_safe_AM4} && ${type_i} > 1" then &
+"set atom ${i} type 6 diameter ${d_e_a3}  density ${Rho_AM}"'
+
+if '${count_AM3} > 0 && ${count_AM4} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM3} && ${type_i} > 1" then &
+"set atom ${i} type 6 diameter ${d_e_a3}  density ${Rho_AM}"'
+
+if '${count_AM4} > 0 && ${count_AM5} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM4} && ${mass_i} < ${mass_safe_AM5} && ${type_i} > 1" then &
+"set atom ${i} type 7 diameter ${d_e_a4}  density ${Rho_AM}"'
+
+if '${count_AM4} > 0 && ${count_AM5} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM4} && ${type_i} > 1" then &
+"set atom ${i} type 7 diameter ${d_e_a4}  density ${Rho_AM}"'
+
+if '${count_AM5} > 0 && ${count_AM6} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM5} && ${mass_i} < ${mass_safe_AM6} && ${type_i} > 1" then &
+"set atom ${i} type 8 diameter ${d_e_a5}  density ${Rho_AM}"'
+
+if '${count_AM5} > 0 && ${count_AM6} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM5} && ${type_i} > 1" then &
+"set atom ${i} type 8 diameter ${d_e_a5}  density ${Rho_AM}"'
+
+if '${count_AM6} > 0 && ${count_AM7} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM6} && ${mass_i} < ${mass_safe_AM7} && ${type_i} > 1" then &
+"set atom ${i} type 9 diameter ${d_e_a6}  density ${Rho_AM}"'
+
+if '${count_AM6} > 0 && ${count_AM7} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM6} && ${type_i} > 1" then &
+"set atom ${i} type 9 diameter ${d_e_a6}  density ${Rho_AM}"'
+
+if '${count_AM7} > 0 && ${count_AM8} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM7} && ${mass_i} < ${mass_safe_AM8} && ${type_i} > 1" then &
+"set atom ${i} type 10 diameter ${d_e_a7}  density ${Rho_AM}"'
+
+if '${count_AM7} > 0 && ${count_AM8} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM7} && ${type_i} > 1" then &
+"set atom ${i} type 10 diameter ${d_e_a7}  density ${Rho_AM}"'
+
+if '${count_AM8} > 0 && ${count_AM9} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM8} && ${mass_i} < ${mass_safe_AM9} && ${type_i} > 1" then &
+"set atom ${i} type 11 diameter ${d_e_a8}  density ${Rho_AM}"'
+
+if '${count_AM8} > 0 && ${count_AM9} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM8} && ${type_i} > 1" then &
+"set atom ${i} type 11 diameter ${d_e_a8}  density ${Rho_AM}"'
+
+if '${count_AM9} > 0 && ${count_AM10} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM9} && ${mass_i} < ${mass_safe_AM10} && ${type_i} > 1" then &
+"set atom ${i} type 12 diameter ${d_e_a9}  density ${Rho_AM}"'
+
+if '${count_AM9} > 0 && ${count_AM10} == 0' then &
+'if "${mass_i} >= ${mass_safe_AM9} && ${type_i} > 1" then &
+"set atom ${i} type 12 diameter ${d_e_a9}  density ${Rho_AM}"'
+
+if '${count_AM10} > 0' then &
+'if "${mass_i} >= ${mass_safe_AM10} && ${type_i} > 1" then &
+"set atom ${i} type 13 diameter ${d_e_a10}  density ${Rho_AM}"'
+
+next i
+jump CBDs.txt loop1
+
+write_data coord_out_slurry_CBDs.data
+

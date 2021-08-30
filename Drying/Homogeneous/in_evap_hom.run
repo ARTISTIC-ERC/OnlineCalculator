@@ -1,0 +1,103 @@
+#Slurry : Active materials (NMC) + Carbon Binder Domain(CBD) (PVDF + Carbon black)
+
+units           micro
+dimension       3
+atom_style      sphere
+#atom_modify     map array
+comm_modify vel yes
+#newton off
+
+## Overall properties
+include user_inputs.txt
+include am_particles.txt
+
+## Force fields pameters
+include force_fields_params.txt
+
+## read slurry structure
+read_data coord_out_slurry.data
+
+## set density and diameter for particles in the slurry phase (the value of CBD change)
+set type 1 diameter ${d_cb}  density ${Rho_cb} # CBD liq 0.1 pg/µm3
+set type 2 diameter ${d_a1}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 3 diameter ${d_a2}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 4 diameter ${d_a3}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 5 diameter ${d_a4}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 6 diameter ${d_a5}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 7 diameter ${d_a6}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 8 diameter ${d_a7}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 9 diameter ${d_a8}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 10 diameter ${d_a9}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 11 diameter ${d_a10}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+
+
+neighbor        3.0 bin
+neigh_modify check yes one 15000 page 150000
+
+# Overall masses and volumes
+variable mass_AM equal v_ratio_AM*v_dry_mass # gram
+variable volume_AM equal 1E+12*v_mass_AM/v_Rho_AM # micro meter 3
+variable mass_CBD equal v_ratio_CBD*v_dry_mass # gram
+variable volume_CBD equal 1E+12*v_mass_CBD/v_Rho_cb # micro meter 3
+
+variable volume_solid equal v_volume_AM+v_volume_CBD # micro meter 3
+print "volume_solid = ${volume_solid}" screen yes
+
+# To update with the previous ones
+variable Box_Volume equal lx*ly*lz*1E-12 # cm3
+variable Porosity equal ((lx*ly*lz)-v_volume_solid)/(lx*ly*lz) # This is just a rough approximation
+variable mass_electrode_g equal v_dry_mass # gram
+variable Density equal v_mass_electrode_g/v_Box_Volume # gram cm-3
+variable mass_AM_mg equal v_mass_AM*1E3 # mg
+variable electrode_surf_cm2 equal lx*ly*1E-8 # cm2
+variable mass_load equal v_mass_AM_mg/v_electrode_surf_cm2 # mg cm-2
+
+#Setting FFs
+pair_style     hybrid/overlay lj/sf ${rc_a5} &
+               gran/hertz/history  ${Kn} ${Kt} ${Gamman} ${Gammat} ${Xu} 1 
+
+## Set pair coefficients for the force fields (LJ - GH)
+include pair_coeff_ev_hom.txt
+
+
+timestep        0.001
+
+thermo 50000
+compute mytemp all temp/sphere
+compute mypress all pressure mytemp
+compute ke_rot all erotate/sphere
+
+thermo_style    custom step temp c_mytemp pe ke c_ke_rot press pzz vol lx ly lz 
+
+#dump 1  all custom 1000000 dump_sol.com_*.atom id type x y z radius
+
+## --------------------- Relaxation --------------------------------- ##
+min_style cg
+minimize 1e-150 1e-150 5000000 10000000
+write_data   coord_min_sol.data
+## --------------------- Dynamics ----------------------------------- ##
+
+variable run equal 70000000
+fix NPT all npt/sphere temp 300.0 300.0 0.2 z 40 100 1000
+
+run ${run}
+write_data   coord_out_electrode.data
+
+set type 2 diameter ${d_e_1}
+set type 3 diameter ${d_e_2}
+set type 4 diameter ${d_e_3}
+set type 5 diameter ${d_e_4}
+set type 6 diameter ${d_e_5}
+set type 7 diameter ${d_e_6}
+set type 8 diameter ${d_e_7}
+set type 9 diameter ${d_e_8}
+set type 10 diameter ${d_e_9}
+set type 11 diameter ${d_e_10}
+
+write_dump all custom Dried_electrode.atom id type x y z radius
+print ${mass_load} file AM_loading.out
+
+# --------------------End of Simulation- ----------------------------- #
+
+  
+

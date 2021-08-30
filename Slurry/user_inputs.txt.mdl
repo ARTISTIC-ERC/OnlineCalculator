@@ -1,0 +1,123 @@
+## Number of AM type 
+variable nAM_part equal 10    
+variable nAM_eff equal @nAM_part@      ## @input - Number of AM particles
+#print ${nAM_part} file nAM_part
+
+## Diameters of the particles
+variable    d_e_1 equal @diameterAM1@   ## @input - Diameter of AM1
+
+if "${nAM_eff} < 2" then &
+"variable    d_e_2 equal 0.01"
+if "${nAM_eff} >= 2" then &
+"variable    d_e_2 equal @diameterAM2@   ## @input - Diameter of AM2 "
+
+if "${nAM_eff} < 3" then &
+"variable    d_e_3 equal 0.01"
+if "${nAM_eff} >= 3" then &
+"variable    d_e_3 equal @diameterAM3@   ## @input - Diameter of AM3 "
+
+if "${nAM_eff} < 4" then &
+"variable    d_e_4 equal 0.01"
+if "${nAM_eff} >= 4" then &
+"variable    d_e_4 equal @diameterAM4@  ## @input - Diameter of AM4 "
+
+if "${nAM_eff} < 5" then &
+"variable    d_e_5 equal 0.01"
+if "${nAM_eff} >= 5" then &
+"variable    d_e_5 equal @diameterAM5@  ## @input - Diameter of AM5 "
+
+if "${nAM_eff} < 6" then &
+"variable    d_e_6 equal 0.01"
+if "${nAM_eff} >= 6" then &
+"variable    d_e_6 equal @diameterAM6@ ## @input - Diameter of AM6 "
+
+if "${nAM_eff} < 7" then &
+"variable    d_e_7 equal 0.01"
+if "${nAM_eff} >= 7" then &
+"variable    d_e_7 equal @diameterAM7@ ## @input - Diameter of AM7 "
+
+if "${nAM_eff} < 8" then &
+"variable    d_e_8 equal 0.01"
+if "${nAM_eff} >= 8" then &
+"variable    d_e_8 equal @diameterAM8@ ## @input - Diameter of AM8 "
+
+if "${nAM_eff} < 9" then &
+"variable    d_e_9 equal 0.01"
+if "${nAM_eff} >= 9" then &
+"variable    d_e_9 equal @diameterAM9@ ## @input - Diameter of AM9 "
+
+if "${nAM_eff} < 10" then &
+"variable    d_e_10 equal 0.01"
+if "${nAM_eff} >= 10" then &
+"variable    d_e_10 equal @diameterAM10@ ## @input - Diameter of AM10 "
+
+# All these percentages are in % of particles. To conveert % in volume to % in particle please refer to the document "Conversion_percentages_AM.docx"
+## AM particle size distribution 
+variable p_AM1 equal @percentAM1@  ##@input - Percentage particles of AM1
+
+if "${nAM_eff} < 2" then &
+"variable    p_AM2 equal 0.00"
+if "${nAM_eff} >= 2" then &
+"variable p_AM2 equal @percentAM2@   ##@input - Percentage particles of AM2 "
+
+if "${nAM_eff} < 3" then &
+"variable    p_AM3 equal 0.00"
+if "${nAM_eff} >= 3" then &
+"variable p_AM3 equal @percentAM3@  ##@input - Percentage particles of AM3 "
+
+if "${nAM_eff} < 4" then &
+"variable    p_AM4 equal 0.00"
+if "${nAM_eff} >= 4" then &
+"variable p_AM4 equal @percentAM4@  ##@input - Percentage particles of AM4 "
+
+if "${nAM_eff} < 5" then &
+"variable    p_AM5 equal 0.00"
+if "${nAM_eff} >= 5" then &
+"variable p_AM5 equal @percentAM5@  ##@input - Percentage particles of AM5 "
+
+if "${nAM_eff} < 6" then &
+"variable    p_AM6 equal 0.00"
+if "${nAM_eff} >= 6" then &
+"variable p_AM6 equal @percentAM6@   ##@input - Percentage particles of AM6 "
+
+if "${nAM_eff} < 7" then &
+"variable    p_AM7 equal 0.00"
+if "${nAM_eff} >= 7" then &
+"variable p_AM7 equal @percentAM7@   ##@input - Percentage particles of AM7 "
+
+if "${nAM_eff} < 8" then &
+"variable    p_AM8 equal 0.00"
+if "${nAM_eff} >= 8" then &
+"variable p_AM8 equal @percentAM8@   ##@input - Percentage particles of AM8 "
+
+if "${nAM_eff} < 9" then &
+"variable    p_AM9 equal 0.00"
+if "${nAM_eff} >= 9" then &
+"variable p_AM9 equal @percentAM9@   ##@input - Percentage particles of AM9 "
+
+if "${nAM_eff} < 10" then &
+"variable    p_AM10 equal 0.00"
+if "${nAM_eff} >= 10" then &
+"variable p_AM10 equal @percentAM10@   ##@input - Percentage particles of AM10 "
+
+
+variable    d_cb equal @diameterCB_solid@   ## @input - Diameter of CBD
+#print ${d_cb} file d_cb
+variable    StL  equal @solid content@  ## @input - Solid content
+
+variable dry_mass equal @dry_mass@/1E6 ## @input 
+variable ratio_AM equal @ratio_AM@ ## @input
+variable ratio_CBD equal @ratio_CBD@ ## @input
+
+
+##############################################################
+# Parameters that depend on the Material types : @AM @CB @PVDF
+##############################################################
+
+# density
+variable    Rho_AM equal 4.65 ## NMC density
+#print ${Rho_AM} file Rho_AM
+variable    Rho_cb equal 0.9 ## C45 + PVdF density accounting for 50% nanoporosity
+#print ${Rho_cb} file Rho_cb
+variable    Rho_cb_liq equal 0.05
+#print ${Rho_cb_liq} file Rho_cb_liq

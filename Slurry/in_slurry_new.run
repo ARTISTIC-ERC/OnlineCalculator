@@ -1,0 +1,91 @@
+#Slurry : Active materials (NMC) + Carbon Binder Domain(CBD) (PVDF + Carbon black)
+
+units           micro
+dimension       3
+atom_style      sphere
+#atom_modify     map array
+comm_modify vel yes
+#newton off
+
+## User inputs
+include user_inputs.txt
+
+## Diameter and density
+include am_particles.txt
+
+## Force fields pameters
+include force_fields_parameters.txt
+
+## Generate initial structure
+include init_structure.txt 
+
+## set density and diameter for particles in the slurry phase (the value of CBD change)
+set type 1 diameter ${d_cb_liq}  density ${Rho_cb_liq} # CBD liq 0.1 pg/µm3
+set type 2 diameter ${d_a1}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 3 diameter ${d_a2}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 4 diameter ${d_a3}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 5 diameter ${d_a4}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 6 diameter ${d_a5}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 7 diameter ${d_a6}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 8 diameter ${d_a7}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 9 diameter ${d_a8}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 10 diameter ${d_a9}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 11 diameter ${d_a10}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+
+# Write the initial structure
+write_data   coord_in.data
+
+
+neighbor        3.0 bin
+neigh_modify check yes one 15000 page 150000
+
+pair_style     hybrid/overlay lj/sf ${rc_a5} &
+               gran/hertz/history  ${Kn} ${Kt} ${Gamman} ${Gammat} ${Xu} 1 
+
+## Set pair coefficients for the force fields (LJ - GH)
+include pair_coeff.txt
+
+
+timestep        0.001
+
+thermo 15000
+compute mytemp all temp/sphere
+compute mypress all pressure mytemp
+compute ke_rot all erotate/sphere
+variable slurry_density equal (v_CBD_mass+v_AM_mass+v_solvent_mass)/(1E-12*lx*ly*lz)
+
+thermo_style    custom step temp c_mytemp pe ke c_ke_rot press pzz vol lx ly lz 
+
+#dump 1  all custom 1000000 dump.com_*.atom id type x y z radius
+
+## --------------------- Relaxation ---------------------------------
+min_style cg
+minimize 1e-150 1e-150 5000000 10000000
+write_data   coord_min.data
+## --------------------- Dynamics -----------------------------------
+
+variable run equal 20000000
+velocity all create 300.0 46659 mom yes rot yes dist gaussian
+fix NPT all npt/sphere temp 300.0 300.0 0.2 iso 0.0 100 1000
+
+run ${run}
+write_data   coord_out_slurry.data
+
+set type 2 diameter ${d_e_1}
+set type 3 diameter ${d_e_2}
+set type 4 diameter ${d_e_3}
+set type 5 diameter ${d_e_4}
+set type 6 diameter ${d_e_5}
+set type 7 diameter ${d_e_6}
+set type 8 diameter ${d_e_7}
+set type 9 diameter ${d_e_8}
+set type 10 diameter ${d_e_9}
+set type 11 diameter ${d_e_10}
+
+write_dump all custom Slurry.atom id type x y z radius
+print ${slurry_density} file density_slurry.out
+
+# --------------------End of Simulation- -----------------------------
+
+  
+

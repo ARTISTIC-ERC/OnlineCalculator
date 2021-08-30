@@ -1,0 +1,164 @@
+##generate structure
+variable pi equal 3.1415926
+
+
+# Mass AM and CBD
+variable AM_mass equal v_ratio_AM*v_dry_mass
+variable CBD_mass equal v_ratio_CBD*v_dry_mass
+
+
+print "AM_mass: ${AM_mass} " screen yes
+print "CBD_mas: ${CBD_mass} " screen yes
+
+
+# Volume AM and CBD
+variable AM_vol equal 1E+12*v_AM_mass/v_Rho_AM # in micro meter
+variable CBD_vol equal 1E+12*v_CBD_mass/v_Rho_cb # in micro meter
+
+# Volume single particle AM and CBD
+variable CBD_pvol equal v_pi*(v_d_cb^3)/6.0
+
+variable AM1_pvol equal v_pi*(v_d_e_a1^3)/6.0
+variable AM2_pvol equal v_pi*(v_d_e_a2^3)/6.0
+variable AM3_pvol equal v_pi*(v_d_e_a3^3)/6.0
+variable AM4_pvol equal v_pi*(v_d_e_a4^3)/6.0
+variable AM5_pvol equal v_pi*(v_d_e_a5^3)/6.0
+variable AM6_pvol equal v_pi*(v_d_e_a6^3)/6.0
+variable AM7_pvol equal v_pi*(v_d_e_a7^3)/6.0
+variable AM8_pvol equal v_pi*(v_d_e_a8^3)/6.0
+variable AM9_pvol equal v_pi*(v_d_e_a9^3)/6.0
+variable AM10_pvol equal v_pi*(v_d_e_a10^3)/6.0
+
+print "AM1_pvol: ${AM1_pvol} " screen yes
+
+if '${nAM_eff} >= 2' then &
+'print "AM2_pvol: ${AM2_pvol} " screen yes'
+
+if '${nAM_eff} >= 3' then &
+'print "AM3_pvol: ${AM3_pvol} " screen yes'
+
+if '${nAM_eff} >= 4' then &
+'print "AM4_pvol: ${AM4_pvol} " screen yes'
+
+if '${nAM_eff} >= 5' then &
+'print "AM5_pvol: ${AM5_pvol} " screen yes'
+
+if '${nAM_eff} >= 6' then &
+'print "AM6_pvol: ${AM6_pvol} " screen yes'
+
+if '${nAM_eff} >= 7' then &
+'print "AM7_pvol: ${AM7_pvol} " screen yes'
+
+if '${nAM_eff} >= 8' then &
+'print "AM8_pvol: ${AM8_pvol} " screen yes'
+
+if '${nAM_eff} >= 9' then &
+'print "AM9_pvol: ${AM9_pvol} " screen yes'
+
+if '${nAM_eff} >= 10' then &
+'print "AM10_pvol: ${AM10_pvol} " screen yes'
+
+# number of AM and CBD particles
+
+variable sum_p_AMi1 equal v_p_AM1*v_AM1_pvol+v_p_AM2*v_AM2_pvol+v_p_AM3*v_AM3_pvol+v_p_AM4*v_AM4_pvol+v_p_AM5*v_AM5_pvol
+variable sum_p_AMi2 equal v_p_AM6*v_AM6_pvol+v_p_AM7*v_AM7_pvol+v_p_AM8*v_AM8_pvol+v_p_AM9*v_AM9_pvol+v_p_AM10*v_AM10_pvol
+variable sum_p_AMi equal v_sum_p_AMi1+v_sum_p_AMi2
+
+variable n_AM_cal equal v_AM_vol/v_sum_p_AMi
+variable n_AM equal round(v_n_AM_cal)
+
+variable n_CBD_cal equal v_CBD_vol/v_CBD_pvol
+variable n_CBD equal round(v_n_CBD_cal)
+
+
+variable n_CBD_20 equal floor(v_n_CBD/20)
+variable n_rest_CBD equal $((v_n_CBD % 20 ))
+#  volume of each AM particle
+
+
+variable n_AM1 equal round(v_n_AM*v_p_AM1)
+variable n_AM2 equal round(v_n_AM*v_p_AM2)
+variable n_AM3 equal round(v_n_AM*v_p_AM3)
+variable n_AM4 equal round(v_n_AM*v_p_AM4)
+variable n_AM5 equal round(v_n_AM*v_p_AM5)
+variable n_AM6 equal round(v_n_AM*v_p_AM6)
+variable n_AM7 equal round(v_n_AM*v_p_AM6)
+variable n_AM8 equal round(v_n_AM*v_p_AM6)
+variable n_AM9 equal round(v_n_AM*v_p_AM6)
+variable n_AM10 equal round(v_n_AM*v_p_AM6)
+
+print "n_AM: ${n_AM} " screen yes
+print "nCBDs: ${n_CBD} " screen yes
+print "n_CBD_20: ${n_CBD_20} " screen yes
+print "n_rest_CBD: ${n_rest_CBD} " screen yes
+print "nAMs: ${n_AM1} ${n_AM2} ${n_AM3} ${n_AM4} ${n_AM5} ${n_AM6} ${n_AM7} ${n_AM8} ${n_AM9} ${n_AM10} " screen yes
+#
+region          box block -200 200 -200 200 -500 500 units box
+create_box      11 box #bond/types 1 extra/bond/per/atom 1
+
+create_atoms 1 random ${n_CBD_20} 34875 NULL units box
+create_atoms 1 random ${n_CBD_20} 30157 NULL units box
+create_atoms 1 random ${n_CBD_20} 97842 NULL units box
+create_atoms 1 random ${n_CBD_20} 46235 NULL units box
+create_atoms 1 random ${n_CBD_20} 22077 NULL units box
+create_atoms 1 random ${n_CBD_20} 62387 NULL units box
+create_atoms 1 random ${n_CBD_20} 68435 NULL units box
+create_atoms 1 random ${n_CBD_20} 98761 NULL units box
+create_atoms 1 random ${n_CBD_20} 34545 NULL units box
+create_atoms 1 random ${n_CBD_20} 68751 NULL units box
+create_atoms 1 random ${n_CBD_20} 89456 NULL units box
+create_atoms 1 random ${n_CBD_20} 13548 NULL units box
+create_atoms 1 random ${n_CBD_20} 56432 NULL units box
+create_atoms 1 random ${n_CBD_20} 84635 NULL units box
+create_atoms 1 random ${n_CBD_20} 65516 NULL units box
+create_atoms 1 random ${n_CBD_20} 32456 NULL units box
+create_atoms 1 random ${n_CBD_20} 68512 NULL units box
+create_atoms 1 random ${n_CBD_20} 79864 NULL units box
+create_atoms 1 random ${n_CBD_20} 98746 NULL units box
+create_atoms 1 random ${n_CBD_20} 68725 NULL units box
+
+if "${n_rest_CBD} > 0" then &
+"create_atoms 1 random ${n_rest_CBD} 66658  NULL units box"
+
+if '${nAM_eff} >= 1' then &
+"create_atoms 2 random  ${n_AM1} 79285 NULL units box"
+
+if '${nAM_eff} >= 2' then &
+"create_atoms 3 random  ${n_AM2} 21784 NULL units box"
+
+if '${nAM_eff} >= 3' then &
+"create_atoms 4 random  ${n_AM3} 13572 NULL units box"
+
+if '${nAM_eff} >= 4' then &
+"create_atoms 5 random  ${n_AM4} 75842 NULL units box"
+
+if '${nAM_eff} >= 5' then &
+"create_atoms 6 random  ${n_AM5} 75843 NULL units box"
+
+if '${nAM_eff} >= 6' then &
+"create_atoms 7 random  ${n_AM6} 75844 NULL units box"
+
+if '${nAM_eff} >= 7' then &
+"create_atoms 8 random  ${n_AM7} 65251 NULL units box"
+
+if '${nAM_eff} >= 8' then &
+"create_atoms 9 random  ${n_AM8} 48733 NULL units box"
+
+if '${nAM_eff} >= 9' then &
+"create_atoms 10 random  ${n_AM9} 99502 NULL units box"
+
+if '${nAM_eff} >= 10' then &
+"create_atoms 11 random  ${n_AM10} 172205 NULL units box"
+
+## Calculated the CBD size un slurry
+
+
+variable    solvent_mass equal (1-${StL})*${dry_mass}/${StL}
+variable    CBD_vol_sol equal 1E+12*(${solvent_mass}+${CBD_mass})/(${Rho_cb_liq}*${n_CBD})
+
+print "solvent_mass: ${solvent_mass} " screen yes
+print "CBD_vol_sol: ${CBD_vol_sol} " screen yes
+
+variable    d_cb_liq equal  (6.0*${CBD_vol_sol}/${pi})^(1/3) 
+print ${d_cb_liq} file d_cb_liq
+print "d_cb_liq: ${d_cb_liq} " screen yes
