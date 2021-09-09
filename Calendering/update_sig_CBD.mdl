@@ -1,0 +1,27 @@
+variable sig_cb_new equal 0.89*v_d_cb_new
+
+# interaction mix 1
+label loop1
+variable i loop 1 ${nAM_part}
+variable j equal v_i+1
+variable  epsi_1$j equal (v_epsi_cb*v_epsi_a$i)^(1/2)
+variable  sig_1$j equal (v_sig_cb_new+v_sig_a$i)/2
+variable  rc_1$j equal (v_rc_cb+v_rc_a$i)/2
+next i
+jump update_sig_CBD loop1
+variable i delete
+variable j delete
+
+pair_coeff      1 1 lj/sf ${epsi_cb} ${sig_cb_new} ${rc_cb}
+pair_coeff      1 2 lj/sf ${epsi_12} ${sig_12} ${rc_12}
+pair_coeff      1 3 lj/sf ${epsi_13} ${sig_13} ${rc_13}
+pair_coeff      1 4 lj/sf ${epsi_14} ${sig_14} ${rc_14}
+pair_coeff      1 5 lj/sf ${epsi_15} ${sig_15} ${rc_15}
+pair_coeff      1 6 lj/sf ${epsi_16} ${sig_16} ${rc_16}
+pair_coeff      1 7 lj/sf ${epsi_17} ${sig_17} ${rc_17}
+pair_coeff      1 8 lj/sf ${epsi_18} ${sig_18} ${rc_18}
+pair_coeff      1 9 lj/sf ${epsi_19} ${sig_19} ${rc_19}
+pair_coeff      1 10 lj/sf ${epsi_110} ${sig_110} ${rc_110}
+pair_coeff      1 11 lj/sf ${epsi_111} ${sig_111} ${rc_111}
+
+

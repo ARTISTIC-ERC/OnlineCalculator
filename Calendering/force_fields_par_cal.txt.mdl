@@ -1,0 +1,43 @@
+## LJ parameters
+# Active material
+## the number of values depend on the number of diameters in the PSD @input
+variable    epsi_AM file epsi_AM_sol
+
+variable    sig_AM file sig_AM_sol
+
+variable    rc_AM file rc_AM_sol
+
+variable exp_par file exp_par_sol
+
+label loop
+variable i loop ${nAM_part}
+variable    epsi_a$i equal v_epsi_AM*(v_d_e_a$i)
+variable    sig_a$i equal v_sig_AM*v_d_e_a$i
+variable    rc_a$i equal v_rc_AM*v_d_e_a$i
+variable d_a$i equal v_exp_par*v_d_e_a$i
+
+next i
+jump force_fields_par_cal.txt loop
+
+
+# CBD
+variable    epsi_cb_pre file epsi_cb_pre_sol
+variable    epsi_cb equal v_epsi_cb_pre*v_d_cb
+
+variable    sig_cb file sig_cb_sol
+
+variable    rc_cb  file rc_cb_sol
+
+## GRANULAR parameters
+variable    Kn file Kn_sol
+
+variable    KtKn file KtKn_sol
+variable    Kt equal v_KtKn*v_Kn
+
+variable    Gamman file Gamman_sol
+
+variable    GammatGamman file GammatGamman_sol
+variable    Gammat equal v_GammatGamman*v_Gamman
+
+variable    Xu file Xu_sol
+

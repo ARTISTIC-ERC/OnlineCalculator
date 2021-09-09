@@ -1,0 +1,189 @@
+#Slurry : Active materials (NMC) + Carbon Binder Domain(CBD) (PVDF + Carbon black)
+
+include initial_check.txt
+
+units           micro
+dimension       3
+atom_style      sphere
+#atom_modify     map array
+boundary        p p f
+comm_modify vel yes
+#newton off
+
+## Overall properties
+include user_inputs.txt
+include am_particles.txt
+
+## Force fields pameters
+variable    d_cb_new equal v_d_cb
+include force_fields_par_cal.txt
+
+# Calendering inputs
+include user_inputs_cal.txt
+
+variable initial_check file test_initial
+
+## read electrode structure
+if "${initial_check} == 1" then &
+"read_data coord_out_electrode.data"
+
+if "${initial_check} == 0" then &
+"read_data coord_out_electrode.data extra/atom/types 2"
+
+group test_2 type 2
+variable test_ev equal count(test_2)
+print "test_ev equal ${test_ev}" screen yes
+include change_types.txt
+
+## set density and diameter for particles in the slurry phase (the value of CBD change)
+set type 1 diameter ${d_cb}  density ${Rho_cb} # CBD liq 0.1 pg/µm3
+set type 2 diameter ${d_a1}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 3 diameter ${d_a2}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 4 diameter ${d_a3}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 5 diameter ${d_a4}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 6 diameter ${d_a5}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 7 diameter ${d_a6}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 8 diameter ${d_a7}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 9 diameter ${d_a8}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 10 diameter ${d_a9}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 11 diameter ${d_a10}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+
+
+neighbor        3.0 bin
+neigh_modify check yes one 15000 page 150000
+
+# Overall masses and volumes
+variable mass_AM equal v_ratio_AM*v_dry_mass # gram
+variable volume_AM equal 1E+12*v_mass_AM/v_Rho_AM # micro meter 3
+variable mass_CBD equal v_ratio_CBD*v_dry_mass # gram
+variable volume_CBD equal 1E+12*v_mass_CBD/v_Rho_cb # micro meter 3
+
+variable volume_solid equal v_volume_AM+v_volume_CBD # micro meter 3
+print "volume_solid = ${volume_solid}" screen yes
+
+# To update with the previous ones
+variable Box_Volume equal lx*ly*lz*1E-12 # cm3
+variable Porosity equal ((lx*ly*lz)-v_volume_solid)/(lx*ly*lz) # This is just a rough approximation
+variable mass_electrode_g equal v_dry_mass # gram
+variable Density equal v_mass_electrode_g/v_Box_Volume # gram cm-3
+variable mass_AM_mg equal v_mass_AM*1E3 # mg
+variable electrode_surf_cm2 equal lx*ly*1E-8 # cm2
+variable mass_load equal v_mass_AM_mg/v_electrode_surf_cm2 # mg cm-2
+
+#Setting FFs
+pair_style     hybrid/overlay lj/sf ${rc_a5} &
+               gran/hertz/history  ${Kn} ${Kt} ${Gamman} ${Gammat} ${Xu} 1 
+
+## Set pair coefficients for the force fields (LJ - GH)
+include pair_coeff_cal.txt
+
+variable timesteps equal 0.0001
+timestep ${timesteps}
+
+thermo 50000
+compute mytemp all temp/sphere
+compute mypress all pressure mytemp
+compute ke_rot all erotate/sphere
+
+thermo_style    custom step temp c_mytemp pe ke c_ke_rot press pzz vol lx ly lz 
+thermo_modify lost warn
+
+#dump 1  all custom 150000 dump_cal.com_*.atom id type x y z radius
+
+fix NVT all nvt/sphere temp 298.15 298.15 0.2
+
+variable zlo equal zlo
+variable zhi equal bound(all,zmax)
+variable lz equal bound(all,zmax)-v_zlo
+print ${zlo} file initial_zlo
+print ${zhi} file initial_zhi
+print ${lz} file initial_lz
+
+variable initial_zlo file initial_zlo
+variable initial_zhi file initial_zhi
+variable initial_lz file initial_lz
+
+variable plane_z_up equal v_initial_zhi
+variable plane_z_down equal v_initial_zlo
+
+variable z_final1 equal v_initial_lz*(1-v_degree_compr)
+print "z box, initial and final1 are ${zhi}, ${initial_lz} and ${z_final1}" screen yes
+
+variable z_hi_final1 equal v_z_final1+v_initial_zlo
+variable thick_compr equal v_initial_zhi-v_z_hi_final1
+
+variable thick_compr_neg equal v_thick_compr*-1
+
+print "z_hi_final equal ${z_hi_final1}" screen yes
+
+print "thick_compr equal ${thick_compr}" screen yes
+
+variable plane_velocity equal 0.02
+variable run equal round(v_thick_compr/(v_timesteps*v_plane_velocity))
+print "run for ${run}" screen yes
+
+variable time equal v_run*v_timesteps
+variable period equal v_time*4
+
+#Planes
+fix wall all wall/gran hertz/history 250000 NULL 30 NULL 15 1 zplane NULL ${plane_z_up} wiggle z ${thick_compr_neg} ${period}
+fix CC all wall/gran hertz/history 250000 NULL 30 NULL 15 1 zplane ${plane_z_down} NULL
+
+
+# Pressure-gravity
+variable gravity equal 9.80665E-6
+fix grav all gravity v_gravity vector 0 0 -1
+
+# CBD nanoporosity decrease
+variable initial_nanoporosity equal 0.5
+variable pi equal 3.1416
+variable volume_CBD_i equal v_pi*(v_d_cb^3)/6
+variable volume_CBD_f equal v_volume_CBD_i*(1-(v_nano_dec*v_initial_nanoporosity))
+print "volume_CBD_f equal ${volume_CBD_f}" screen yes
+variable d_cb_f equal (v_volume_CBD_f*6/v_pi)^(1/3)
+print "d_cb_f equal ${d_cb_f}" screen yes
+variable new_nanoporosity equal (1-v_nano_dec)*v_initial_nanoporosity
+print ${new_nanoporosity} file new_CBD_nanoporosity
+
+group CBD type 1
+variable compress_every equal 4000
+variable d_cb_new equal v_d_cb+((step/v_run)*(v_d_cb_f-v_d_cb))
+fix compressCBD CBD adapt ${compress_every} atom diameter v_d_cb_new 
+
+run ${run}
+
+unfix compressCBD
+unfix wall
+
+include update_sig_CBD
+fix up all wall/gran hertz/history 250000 NULL 30 NULL 15 1 zplane ${z_hi_final1} NULL
+
+#Run for relaxing the CBD position if they are shrunk for the purpouse of removing nanoporosity
+if "${nano_dec} > 0" then &
+"run 1000000"
+unfix up
+
+
+variable relax_time equal 1000000
+if "${relax} == 1" then &
+"run ${relax_time}"
+
+write_data   coord_out_cal.data
+
+set type 2 diameter ${d_e_1}
+set type 3 diameter ${d_e_2}
+set type 4 diameter ${d_e_3}
+set type 5 diameter ${d_e_4}
+set type 6 diameter ${d_e_5}
+set type 7 diameter ${d_e_6}
+set type 8 diameter ${d_e_7}
+set type 9 diameter ${d_e_8}
+set type 10 diameter ${d_e_9}
+set type 11 diameter ${d_e_10}
+
+write_dump all custom Cal_electrode.atom id type x y z radius
+
+# --------------------End of Simulation- ----------------------------- #
+
+  
+

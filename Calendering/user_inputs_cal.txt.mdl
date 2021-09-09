@@ -1,0 +1,5 @@
+variable degree_compr equal @cal_degree@ ## @input
+
+variable relax equal @relax@ ## @input
+
+variable nano_dec equal @nano_dec@ ## @input

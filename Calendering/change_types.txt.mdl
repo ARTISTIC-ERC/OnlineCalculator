@@ -1,0 +1,17 @@
+if "${test_ev} > 0" then "jump change_types.txt homogeneous"
+
+# Here the AM particle types are changed to be 2<=x<=11 (1 == CBD)
+label loop
+variable i loop ${nAM_part}
+variable type_n equal v_i+1
+variable j equal v_i+3
+group AM$i type ${j}
+set group AM$i type ${type_n}
+next i
+jump change_types.txt loop
+
+print "Change AMs types done" screen yes
+
+label homogeneous
+if "${test_ev} > 0" then "print 'Change AMs types not needed' screen yes"
+

@@ -1,0 +1,21 @@
+units           micro
+dimension       3
+atom_style      sphere
+#atom_modify     map array
+boundary        p p f
+comm_modify vel yes
+#newton off
+
+## read slurry structure
+read_data coord_out_electrode.data
+
+group test_2 type 2
+variable test_ev equal count(test_2)
+
+variable homo equal 0
+variable hetero equal 1
+
+if "${test_ev} > 0" then "print ${homo} file test_initial" 
+if "${test_ev} == 0" then "print ${hetero} file test_initial"
+
+clear

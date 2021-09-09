@@ -1,0 +1,282 @@
+## set density and diameter for particles in the slurry phase (the value of CBD change)
+set type 1 diameter ${d_cb}  density ${Rho_cb} # CBD liq 0.1 pg/µm3
+set type 2 diameter ${d_a1}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 3 diameter ${d_a2}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 4 diameter ${d_a3}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 5 diameter ${d_a4}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 6 diameter ${d_a5}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 7 diameter ${d_a6}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 8 diameter ${d_a7}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 9 diameter ${d_a8}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 10 diameter ${d_a9}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+set type 11 diameter ${d_a10}  density ${Rho_AM} # MCMB 4.65 pg/µm3
+
+
+## number of pair depends of the number of particle types @input diamters PSD
+pair_coeff      1 1 lj/sf ${epsi_cb} ${sig_cb} ${rc_cb}
+pair_coeff      2 2 lj/sf ${epsi_a1} ${sig_a1} ${rc_a1}
+pair_coeff      3 3 lj/sf ${epsi_a2} ${sig_a2} ${rc_a2}
+pair_coeff      4 4 lj/sf ${epsi_a3} ${sig_a3} ${rc_a3}
+pair_coeff      5 5 lj/sf ${epsi_a4} ${sig_a4} ${rc_a4}
+pair_coeff      6 6 lj/sf ${epsi_a5} ${sig_a5} ${rc_a5}
+pair_coeff      7 7 lj/sf ${epsi_a6} ${sig_a6} ${rc_a6}
+pair_coeff      8 8 lj/sf ${epsi_a7} ${sig_a7} ${rc_a7}
+pair_coeff      9 9 lj/sf ${epsi_a8} ${sig_a8} ${rc_a8}
+pair_coeff      10 10 lj/sf ${epsi_a9} ${sig_a9} ${rc_a9}
+pair_coeff      11 11 lj/sf ${epsi_a10} ${sig_a10} ${rc_a10}
+pair_coeff      12 12 lj/sf 0.001 0.001 0.001
+pair_coeff      13 13 lj/sf 0.001 0.001 0.001
+
+# interaction mix 1
+label loop1
+variable i loop 1 ${nAM_part}
+variable j equal v_i+1
+variable  epsi_1$j equal (v_epsi_cb*v_epsi_a$i)^(1/2)
+variable  sig_1$j equal (v_sig_cb+v_sig_a$i)/2
+variable  rc_1$j equal (v_rc_cb+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop1
+variable i delete
+variable j delete
+
+#interaction mix 2
+label loop2
+variable a equal 1
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop2
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+#interaction mix 3
+label loop3
+variable a equal 2
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop3
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+
+#interaction mix 4
+label loop4
+variable a equal 3
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop4
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+#interaction mix 5
+label loop5
+variable a equal 4
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop5
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+#interaction mix 6
+label loop6
+variable a equal 5
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop6
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+#interaction mix 7
+label loop7
+variable a equal 6
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop7
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+#interaction mix 8
+label loop8
+variable a equal 7
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop8
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+#interaction mix 9
+label loop9
+variable a equal 8
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop9
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+#interaction mix 10
+label loop10
+variable a equal 9
+variable s equal v_a+1
+variable i loop ${s} ${nAM_part}
+variable j equal v_i+1
+variable  epsi_${s}$j equal (v_epsi_a$a*v_epsi_a$i)^(1/2)
+variable  sig_${s}$j equal (v_sig_a$a+v_sig_a$i)/2
+variable  rc_${s}$j equal (v_rc_a$a+v_rc_a$i)/2
+next i
+jump pair_coeff_cal.txt loop10
+variable a delete
+variable s delete
+variable i delete
+variable j delete
+
+
+pair_coeff      1 2 lj/sf ${epsi_12} ${sig_12} ${rc_12}
+pair_coeff      1 3 lj/sf ${epsi_13} ${sig_13} ${rc_13}
+pair_coeff      1 4 lj/sf ${epsi_14} ${sig_14} ${rc_14}
+pair_coeff      1 5 lj/sf ${epsi_15} ${sig_15} ${rc_15}
+pair_coeff      1 6 lj/sf ${epsi_16} ${sig_16} ${rc_16}
+pair_coeff      1 7 lj/sf ${epsi_17} ${sig_17} ${rc_17}
+pair_coeff      1 8 lj/sf ${epsi_18} ${sig_18} ${rc_18}
+pair_coeff      1 9 lj/sf ${epsi_19} ${sig_19} ${rc_19}
+pair_coeff      1 10 lj/sf ${epsi_110} ${sig_110} ${rc_110}
+pair_coeff      1 11 lj/sf ${epsi_111} ${sig_111} ${rc_111}
+pair_coeff      1 12 lj/sf 0.001 0.001 0.001
+pair_coeff      1 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      2 3 lj/sf ${epsi_23} ${sig_23} ${rc_23}
+pair_coeff      2 4 lj/sf ${epsi_24} ${sig_24} ${rc_24}
+pair_coeff      2 5 lj/sf ${epsi_25} ${sig_25} ${rc_25}
+pair_coeff      2 6 lj/sf ${epsi_26} ${sig_26} ${rc_26}
+pair_coeff      2 7 lj/sf ${epsi_27} ${sig_27} ${rc_27}
+pair_coeff      2 8 lj/sf ${epsi_28} ${sig_28} ${rc_28}
+pair_coeff      2 9 lj/sf ${epsi_29} ${sig_29} ${rc_29}
+pair_coeff      2 10 lj/sf ${epsi_210} ${sig_210} ${rc_210}
+pair_coeff      2 11 lj/sf ${epsi_211} ${sig_211} ${rc_211}
+pair_coeff      2 12 lj/sf 0.001 0.001 0.001
+pair_coeff      2 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      3 4 lj/sf ${epsi_34} ${sig_34} ${rc_34}
+pair_coeff      3 5 lj/sf ${epsi_35} ${sig_35} ${rc_35}
+pair_coeff      3 6 lj/sf ${epsi_36} ${sig_36} ${rc_36}
+pair_coeff      3 7 lj/sf ${epsi_37} ${sig_37} ${rc_37}
+pair_coeff      3 8 lj/sf ${epsi_38} ${sig_38} ${rc_38}
+pair_coeff      3 9 lj/sf ${epsi_39} ${sig_39} ${rc_39}
+pair_coeff      3 10 lj/sf ${epsi_310} ${sig_310} ${rc_310}
+pair_coeff      3 11 lj/sf ${epsi_311} ${sig_311} ${rc_311}
+pair_coeff      3 12 lj/sf 0.001 0.001 0.001
+pair_coeff      3 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      4 5 lj/sf ${epsi_45} ${sig_45} ${rc_45}
+pair_coeff      4 6 lj/sf ${epsi_46} ${sig_46} ${rc_46}
+pair_coeff      4 7 lj/sf ${epsi_47} ${sig_47} ${rc_47}
+pair_coeff      4 8 lj/sf ${epsi_48} ${sig_48} ${rc_48}
+pair_coeff      4 9 lj/sf ${epsi_49} ${sig_49} ${rc_49}
+pair_coeff      4 10 lj/sf ${epsi_410} ${sig_410} ${rc_410}
+pair_coeff      4 11 lj/sf ${epsi_411} ${sig_411} ${rc_411}
+pair_coeff      4 12 lj/sf 0.001 0.001 0.001
+pair_coeff      4 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      5 6 lj/sf ${epsi_56} ${sig_56} ${rc_56}
+pair_coeff      5 7 lj/sf ${epsi_57} ${sig_57} ${rc_57}
+pair_coeff      5 8 lj/sf ${epsi_58} ${sig_58} ${rc_58}
+pair_coeff      5 9 lj/sf ${epsi_59} ${sig_59} ${rc_59}
+pair_coeff      5 10 lj/sf ${epsi_510} ${sig_510} ${rc_510}
+pair_coeff      5 11 lj/sf ${epsi_511} ${sig_511} ${rc_511}
+pair_coeff      5 12 lj/sf 0.001 0.001 0.001
+pair_coeff      5 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      6 7 lj/sf ${epsi_67} ${sig_67} ${rc_67}
+pair_coeff      6 8 lj/sf ${epsi_68} ${sig_68} ${rc_68}
+pair_coeff      6 9 lj/sf ${epsi_69} ${sig_69} ${rc_69}
+pair_coeff      6 10 lj/sf ${epsi_610} ${sig_610} ${rc_610}
+pair_coeff      6 11 lj/sf ${epsi_611} ${sig_611} ${rc_611}
+pair_coeff      6 12 lj/sf 0.001 0.001 0.001
+pair_coeff      6 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      7 8 lj/sf ${epsi_78} ${sig_78} ${rc_78}
+pair_coeff      7 9 lj/sf ${epsi_79} ${sig_79} ${rc_79}
+pair_coeff      7 10 lj/sf ${epsi_710} ${sig_710} ${rc_710}
+pair_coeff      7 11 lj/sf ${epsi_711} ${sig_711} ${rc_711}
+pair_coeff      7 12 lj/sf 0.001 0.001 0.001
+pair_coeff      7 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      8 9 lj/sf ${epsi_89} ${sig_89} ${rc_89}
+pair_coeff      8 10 lj/sf ${epsi_810} ${sig_810} ${rc_810}
+pair_coeff      8 11 lj/sf ${epsi_811} ${sig_811} ${rc_811}
+pair_coeff      8 12 lj/sf 0.001 0.001 0.001
+pair_coeff      8 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      9 10 lj/sf ${epsi_910} ${sig_910} ${rc_910}
+pair_coeff      9 11 lj/sf ${epsi_911} ${sig_911} ${rc_911}
+pair_coeff      9 12 lj/sf 0.001 0.001 0.001
+pair_coeff      9 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      10 11 lj/sf ${epsi_1011} ${sig_1011} ${rc_1011}
+pair_coeff      10 12 lj/sf 0.001 0.001 0.001
+pair_coeff      10 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      11 12 lj/sf 0.001 0.001 0.001
+pair_coeff      11 13 lj/sf 0.001 0.001 0.001
+
+pair_coeff      12 13 lj/sf 0.001 0.001 0.001
+
+#pair_modify pair lj/sf mix arithmetic
+
+## Granular 
+pair_coeff    * * gran/hertz/history
+
