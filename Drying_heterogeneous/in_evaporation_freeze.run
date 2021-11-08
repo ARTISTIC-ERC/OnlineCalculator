@@ -1,4 +1,4 @@
-#Slurry : Active materials (NMC) + Carbon Binder Domain(CBD) (PVDF + Carbon black)
+#Drying heterogeneous : Active materials (NMC) + Carbon Binder Domain(CBD) (PVDF + Carbon black)
 
 atom_modify map array
 units           micro
@@ -6,9 +6,6 @@ dimension       3
 atom_style      sphere
 boundary        p p f
 read_data coord_out_slurry_CBDs.data
-group CBD_ini type 1 2 3 
-variable n_CBD_ini equal count(CBD_ini)
-print "n_CBD_ini equal ${n_CBD_ini}" screen yes
 
 include user_inputs.txt
 include am_particles.txt
@@ -85,7 +82,9 @@ if "${z_position_i} > ${l1z} && ${z_position_i} <= ${l2z} && ${type_i} <= 3 " th
 next i
 jump in_evaporation_freeze.run loop1
 
-
+set type 1  diameter ${d_cb1}  density ${Rho_cb1}
+set type 2  diameter ${d_cb2}  density ${Rho_cb2}
+set type 3  diameter ${d_cb3}  density ${Rho_cb3}
 set type 4 diameter ${d_a1}  density ${Rho_AM}
 set type 5 diameter ${d_a2}  density ${Rho_AM}
 set type 6 diameter ${d_a3}  density ${Rho_AM}
@@ -150,7 +149,7 @@ variable volume_CBD equal 1E+12*v_mass_CBD/v_Rho_cb # micro meter 3
 variable volume_solid equal v_volume_AM+v_volume_CBD # micro meter 3
 print "volume_solid = ${volume_solid}" screen yes
 
-# To update with the previous ones
+# Macroscopic electrode feature - the porosity calculated here is just a rough approximation not considering particle overlapping. The corerct porosity is calculated at the end of the simulation through the devoted Python script
 variable Box_Volume equal lx*ly*v_lz_particle_final*1E-12 # cm3
 variable Porosity equal ((lx*ly*v_lz_particle_final)-v_volume_solid)/(lx*ly*v_lz_particle_final) # This is just a rough approximation
 variable mass_electrode_g equal v_dry_mass # gram

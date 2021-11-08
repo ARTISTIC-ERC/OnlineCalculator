@@ -1,4 +1,4 @@
-#Slurry : Active materials (NMC) + Carbon Binder Domain(CBD) (PVDF + Carbon black)
+#Calendering : Active materials (NMC) + Carbon Binder Domain(CBD) (PVDF + Carbon black)
 
 include initial_check.txt
 
@@ -25,17 +25,17 @@ variable initial_check file test_initial
 
 ## read electrode structure
 if "${initial_check} == 1" then &
-"read_data coord_out_electrode.data"
+"read_data coord_out_electrode_safe.data"
 
 if "${initial_check} == 0" then &
-"read_data coord_out_electrode.data extra/atom/types 2"
+"read_data coord_out_electrode_safe.data extra/atom/types 2"
 
 group test_2 type 2
 variable test_ev equal count(test_2)
 print "test_ev equal ${test_ev}" screen yes
 include change_types.txt
 
-## set density and diameter for particles in the slurry phase (the value of CBD change)
+## set density and diameter for particles 
 set type 1 diameter ${d_cb}  density ${Rho_cb} # CBD liq 0.1 pg/µm3
 set type 2 diameter ${d_a1}  density ${Rho_AM} # MCMB 4.65 pg/µm3
 set type 3 diameter ${d_a2}  density ${Rho_AM} # MCMB 4.65 pg/µm3
@@ -61,7 +61,7 @@ variable volume_CBD equal 1E+12*v_mass_CBD/v_Rho_cb # micro meter 3
 variable volume_solid equal v_volume_AM+v_volume_CBD # micro meter 3
 print "volume_solid = ${volume_solid}" screen yes
 
-# To update with the previous ones
+# Macroscopic electrode feature - the porosity calculated here is just a rough approximation not considering particle overlapping. The corerct porosity is calculated at the end of the simulation through the devoted Python script
 variable Box_Volume equal lx*ly*lz*1E-12 # cm3
 variable Porosity equal ((lx*ly*lz)-v_volume_solid)/(lx*ly*lz) # This is just a rough approximation
 variable mass_electrode_g equal v_dry_mass # gram
@@ -130,9 +130,16 @@ fix wall all wall/gran hertz/history 250000 NULL 30 NULL 15 1 zplane NULL ${plan
 fix CC all wall/gran hertz/history 250000 NULL 30 NULL 15 1 zplane ${plane_z_down} NULL
 
 
-# Pressure-gravity
-variable gravity equal 9.80665E-6
-fix grav all gravity v_gravity vector 0 0 -1
+# effective gravity - This effective gravity is applied during the heterogeneous drying, and it is applied also here (for the elecrodes obtained through the heterogeneous drying procedure) to make as smooth as possible the transition from drying to calendering. For the same reason the effective gravity is not applied for electrodes obtained through the homogeneous drying approach
+variable gravity equal 1
+if "${initial_check} == 1" then &
+"fix grav all gravity v_gravity vector 0 0 -1"
+
+## --------------------- Relaxation ---------------------------------
+min_style cg
+minimize 1e-150 1e-150 50000 10000000
+write_data   coord_min_cal.data
+## --------------------- Dynamics -----------------------------------
 
 # CBD nanoporosity decrease
 variable initial_nanoporosity equal 0.5
@@ -158,12 +165,12 @@ unfix wall
 include update_sig_CBD
 fix up all wall/gran hertz/history 250000 NULL 30 NULL 15 1 zplane ${z_hi_final1} NULL
 
-#Run for relaxing the CBD position if they are shrunk for the purpouse of removing nanoporosity
+# Run for relaxing the CBD position if they are shrunk for the purpouse of removing nanoporosity
 if "${nano_dec} > 0" then &
 "run 1000000"
 unfix up
 
-
+# Elastic recovery
 variable relax_time equal 1000000
 if "${relax} == 1" then &
 "run ${relax_time}"

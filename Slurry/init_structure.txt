@@ -93,7 +93,7 @@ print "n_CBD_20: ${n_CBD_20} " screen yes
 print "n_rest_CBD: ${n_rest_CBD} " screen yes
 print "nAMs: ${n_AM1} ${n_AM2} ${n_AM3} ${n_AM4} ${n_AM5} ${n_AM6} ${n_AM7} ${n_AM8} ${n_AM9} ${n_AM10} " screen yes
 #
-region          box block -200 200 -200 200 -500 500 units box
+region          box block -${size_ini_xy} ${size_ini_xy} -${size_ini_xy} ${size_ini_xy} -${size_ini_z} ${size_ini_z} units box
 create_box      11 box #bond/types 1 extra/bond/per/atom 1
 
 create_atoms 1 random ${n_CBD_20} 34875 NULL units box

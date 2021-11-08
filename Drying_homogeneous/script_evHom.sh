@@ -1,14 +1,14 @@
 #!/bin/sh
 #SBATCH --job-name=lammps
-#SBATCH --partition=midmem                      # submission queue
-#SBATCH --time=50-0:00:00                        # 1-1 means one day and one hour -> here 20min
+#SBATCH --partition=long                      # submission queue
+#SBATCH --time=15-0:00:00                        # 1-1 means one day and one hour -> here 20min
 #SBATCH --mail-type=END
-#SBATCH --mail-user=teo.lombardo@u-picardie.fr       #e-mail notification
+#SBATCH --mail-user=alain.ngandjong@u-picardie.fr       #e-mail notification
 #SBATCH --output=job_seq-%j.out         # if --error is absent, includes alsothe errors
-#SBATCH --nodes=1      # 2 cpus
-#SBATCH --ntasks-per-node=40
+#SBATCH --nodes=2      # 2 cpus
+#SBATCH --ntasks-per-node=25
 ##SBATCH --cpus=10
-#SBATCH --mem=25G                                # T-tera, G-giga, M-mega
+#SBATCH --mem=15G                                # T-tera, G-giga, M-mega
 
 ##
 ==================================================================================
@@ -49,14 +49,10 @@ echo
 module load openmpi/intel-opa/gcc
 module load lammps
 
-mpirun -mca btl ^openib -np $SLURM_NPROCS lmp_mpi < CBDs.txt
-mpirun -mca btl ^openib -np $SLURM_NPROCS lmp_mpi < in_evaporation_freeze.run
-
-rm restart*
-rm log.*
+mpirun -mca btl ^openib -np $SLURM_NPROCS lmp_mpi < in_evap_hom.run
 
 python3.6 pores.py
 
-touch finish
+touch finish_ev
 # end of the USER commands
 

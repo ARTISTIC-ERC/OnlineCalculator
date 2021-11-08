@@ -1,0 +1,7 @@
+variable degree_compr equal @cal_degree@ ## @input - Fraction of the initial electrode thickness that is compressed. Ex: 0.25
+
+variable nano_dec equal @nano_dec@  ## @input - Decrease of CBD nanoporosity during compression. Ex: 0.05
+
+variable relax equal @relax@ ## @input  - Consider (1), or not (0) the electrode elastic relaxation
+
+variable minimize equal @minimize@ ## @input - minimize the energy of the system before the run. Use 1 for not considering it (adviced) and 0 for using it. Performing the minimization can solve instability issues but at the cost of loosing some particles at the beginning of the simulation. Attention: perform the minimizzation only if strictly needed.

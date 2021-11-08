@@ -1,9 +1,9 @@
 #!/bin/sh
 #SBATCH --job-name=lammps
 #SBATCH --partition=long                      # submission queue
-#SBATCH --time=15-0:00:00                        # 1-1 means one day and one hour -> here 20min
+#SBATCH --time=10-0:00:00                        # 1-1 means one day and one hour -> here 20min
 #SBATCH --mail-type=END
-#SBATCH --mail-user=alain.ngandjong@u-picardie.fr       #e-mail notification
+##SBATCH --mail-user=alain.ngandjong@u-picardie.fr       #e-mail notification
 #SBATCH --output=job_seq-%j.out         # if --error is absent, includes alsothe errors
 #SBATCH --nodes=1      # 2 cpus
 #SBATCH --ntasks-per-node=25
@@ -49,8 +49,14 @@ echo
 module load openmpi/intel-opa/gcc
 module load lammps
 
-mpirun -mca btl ^openib -np $SLURM_NPROCS lmp_mpi < in_slurry.run
+python3.6 Reformatting_cal_electrode.py
 
-touch finish 
+sleep 10
+
+mpirun -mca btl ^openib -np $SLURM_NPROCS lmp_mpi < in_cal.run
+
+python3.6 pores_cal.py
+
+touch finish
 # end of the USER commands
 

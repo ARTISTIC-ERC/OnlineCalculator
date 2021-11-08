@@ -1,13 +1,14 @@
-variable n_zones equal @number_evaporation_zone@ ## @input - number of evaporation zones (either 2 or 3)
+variable n_zones equal @nzones@ ## @input - Number of drying zones (here either 2 or 3)
 if "${a} == 1" then &
 "print ${n_zones} file n_zones"
 
 variable evap_rate1 equal 1
 
-variable evap_mode equal @evap_mode@ ## @input - linear=1, square_root=0.5, squre_cube=0.33, quadratic=2, cubic=3
+## linear=1, square_root=0.5, squre_cube=0.33, quadratic=2, cubic=3
+variable evap_mode equal 1 ## @input - Evaporation mode
 
 variable evap_rate2_ini equal 1
-variable evap_rate2_fin equal @zone_center@ ## @input - zone center value if using 3 zones or zone up value if using 2 zones
+variable evap_rate2_fin equal @evap_rate2@ ## @input - Relative shrinking factor of zone 2 (either middle (3 zones) or top (3 zones))
 variable evap_rate2 equal v_evap_rate2_ini+(((v_a/v_a_max)^(1/v_evap_mode))*(v_evap_rate2_fin-v_evap_rate2_ini))
 print "evap_rate2 equal ${evap_rate2} at iteration ${a}" screen yes
 
@@ -15,7 +16,7 @@ variable evap_rate3_ini equal 1
 if "${n_zones} < 3" then &
 "variable evap_rate3_fin equal 1"
 if "${n_zones} == 3" then &
-"variable evap_rate3_fin equal @zone_up@ ## @input - zone up value if using 3 zones"
+"variable evap_rate3_fin equal @evap_rate3@ ## @input" - Relative shrinking factor of zone 3 (top)
 variable evap_rate3 equal v_evap_rate3_ini+(((v_a/v_a_max)^(1/v_evap_mode))*(v_evap_rate3_fin-v_evap_rate3_ini))
 print "evap_rate3 equal ${evap_rate3} at iteration ${a}" screen yes
 

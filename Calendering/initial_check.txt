@@ -6,8 +6,8 @@ boundary        p p f
 comm_modify vel yes
 #newton off
 
-## read slurry structure
-read_data coord_out_electrode.data
+## read electrode structure
+read_data coord_out_electrode_safe.data
 
 group test_2 type 2
 variable test_ev equal count(test_2)

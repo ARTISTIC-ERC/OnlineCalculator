@@ -1,0 +1,125 @@
+## Number of AM type 
+variable nAM_part equal 10    
+variable nAM_eff equal @nAM_part@      ## @input - number of different AM particle sizes
+#print ${nAM_part} file nAM_part
+
+## Diameters of AM particles in µm
+variable    d_e_1 equal @diameterAM1@   ## @input
+
+if "${nAM_eff} < 2" then &
+"variable    d_e_2 equal 0.01"
+if "${nAM_eff} >= 2" then &
+"variable    d_e_2 equal @diameterAM2@   ## @input "
+
+if "${nAM_eff} < 3" then &
+"variable    d_e_3 equal 0.01"
+if "${nAM_eff} >= 3" then &
+"variable    d_e_3 equal @diameterAM3@   ## @input "
+
+if "${nAM_eff} < 4" then &
+"variable    d_e_4 equal 0.01"
+if "${nAM_eff} >= 4" then &
+"variable    d_e_4 equal @diameterAM4@  ## @input "
+
+if "${nAM_eff} < 5" then &
+"variable    d_e_5 equal 0.01"
+if "${nAM_eff} >= 5" then &
+"variable    d_e_5 equal @diameterAM5@  ## @input "
+
+if "${nAM_eff} < 6" then &
+"variable    d_e_6 equal 0.01"
+if "${nAM_eff} >= 6" then &
+"variable    d_e_6 equal @diameterAM6@ ## @input "
+
+if "${nAM_eff} < 7" then &
+"variable    d_e_7 equal 0.01"
+if "${nAM_eff} >= 7" then &
+"variable    d_e_7 equal @diameterAM7@ ## @input "
+
+if "${nAM_eff} < 8" then &
+"variable    d_e_8 equal 0.01"
+if "${nAM_eff} >= 8" then &
+"variable    d_e_8 equal @diameterAM8@ ## @input "
+
+if "${nAM_eff} < 9" then &
+"variable    d_e_9 equal 0.01"
+if "${nAM_eff} >= 9" then &
+"variable    d_e_9 equal @diameterAM9@ ## @input "
+
+if "${nAM_eff} < 10" then &
+"variable    d_e_10 equal 0.01"
+if "${nAM_eff} >= 10" then &
+"variable    d_e_10 equal @diameterAM10@ ## @input "
+
+## AM particle size distribution (here fraction of number of particles - Ex: 0.2 - Important: the sum should be 1)
+variable p_AM1 equal @percentAM1@  ##@input
+
+if "${nAM_eff} < 2" then &
+"variable    p_AM2 equal 0.00"
+if "${nAM_eff} >= 2" then &
+"variable p_AM2 equal @percentAM2@   ##@input "
+
+if "${nAM_eff} < 3" then &
+"variable    p_AM3 equal 0.00"
+if "${nAM_eff} >= 3" then &
+"variable p_AM3 equal @percentAM3@  ##@input "
+
+if "${nAM_eff} < 4" then &
+"variable    p_AM4 equal 0.00"
+if "${nAM_eff} >= 4" then &
+"variable p_AM4 equal @percentAM4@  ##@input "
+
+if "${nAM_eff} < 5" then &
+"variable    p_AM5 equal 0.00"
+if "${nAM_eff} >= 5" then &
+"variable p_AM5 equal @percentAM5@  ##@input "
+
+if "${nAM_eff} < 6" then &
+"variable    p_AM6 equal 0.00"
+if "${nAM_eff} >= 6" then &
+"variable p_AM6 equal @percentAM6@   ##@input "
+
+if "${nAM_eff} < 7" then &
+"variable    p_AM7 equal 0.00"
+if "${nAM_eff} >= 7" then &
+"variable p_AM7 equal @percentAM7@   ##@input "
+
+if "${nAM_eff} < 8" then &
+"variable    p_AM8 equal 0.00"
+if "${nAM_eff} >= 8" then &
+"variable p_AM8 equal @percentAM8@   ##@input "
+
+if "${nAM_eff} < 9" then &
+"variable    p_AM9 equal 0.00"
+if "${nAM_eff} >= 9" then &
+"variable p_AM9 equal @percentAM9@   ##@input "
+
+if "${nAM_eff} < 10" then &
+"variable    p_AM10 equal 0.00"
+if "${nAM_eff} >= 10" then &
+"variable p_AM10 equal @percentAM10@   ##@input "
+
+variable    d_cb equal @diameterCB_solid@   ## @input - diameter of solid CBD agglomerates (after drying)
+variable    StL  equal @stl_ratio@  ## @input - Solid content - Ex: 0.55
+
+
+variable dry_mass equal @dry_mass@/1E6 ## @input - Mass of the simulated electrode in µg 
+variable ratio_AM equal @ratio_AM@ ## @input - AM wt.% - Ex: 0.94
+variable ratio_CBD equal @ratio_CBD@ ## @input - CBD wt.% (sum of carbon and binder) - Ex: 0.06
+
+# Size of the 
+variable size_ini_xy equal 200
+variable level_thick equal @thickness@ # @input 0: thinner, 1: thicker
+if "${level_thick} == 0" then "variable size_ini_z equal 500"
+if "${level_thick} == 1" then "variable size_ini_z equal 1000"
+
+
+##############################################################
+# Parameters that depend on the Material types : @AM @CB @PVDF
+##############################################################
+
+# Material density and CBD nanoporosity
+variable    Rho_AM equal 4.65 ## @ it depends of the @AM material input : this refers to NMC-111
+variable    ini_CBD_nano equal @CBD_nanoporosity@ ## @input Initial CBD nanoporosity. Experimentally it was found to be around 0.5 (DOI: 10.1002/aenm.201401612)
+variable    Rho_cb equal 1.8*v_ini_CBD_nano ## @ it depends of the @CB and @PVDF materials : this refers to C65 and PVdF, both aving a density of ca. 1.8 g cm-3
+variable    Rho_cb_liq equal 0.05  ## @ it depends of the @CB , @PVDF and @Solvent materials : this value was taken by previous parametrization of the slurry model (DOI: 10.1002/batt.202000049)
