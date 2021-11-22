@@ -149,7 +149,7 @@ variable volume_CBD equal 1E+12*v_mass_CBD/v_Rho_cb # micro meter 3
 variable volume_solid equal v_volume_AM+v_volume_CBD # micro meter 3
 print "volume_solid = ${volume_solid}" screen yes
 
-# Macroscopic electrode feature - the porosity calculated here is just a rough approximation not considering particle overlapping. The corerct porosity is calculated at the end of the simulation through the devoted Python script
+# To update with the previous ones
 variable Box_Volume equal lx*ly*v_lz_particle_final*1E-12 # cm3
 variable Porosity equal ((lx*ly*v_lz_particle_final)-v_volume_solid)/(lx*ly*v_lz_particle_final) # This is just a rough approximation
 variable mass_electrode_g equal v_dry_mass # gram

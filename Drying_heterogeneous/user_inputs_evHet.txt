@@ -5,7 +5,7 @@ if "${a} == 1" then &
 variable evap_rate1 equal 1
 
 ## linear=1, square_root=0.5, squre_cube=0.33, quadratic=2, cubic=3
-variable evap_mode equal 1 ## @input - Evaporation mode
+variable evap_mode equal @evap_mode@ ## @input - Evaporation mode
 
 variable evap_rate2_ini equal 1
 variable evap_rate2_fin equal @evap_rate2@ ## @input - Relative shrinking factor of zone 2 (either middle (3 zones) or top (3 zones))

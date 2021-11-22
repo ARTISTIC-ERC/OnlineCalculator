@@ -88,7 +88,7 @@ compute ke_rot all erotate/sphere
 thermo_style    custom step temp c_mytemp pe ke c_ke_rot press pzz vol lx ly lz 
 thermo_modify lost warn
 
-#dump 1  all custom 150000 dump_cal.com_*.atom id type x y z radius
+dump 1  all custom 150000 dump_cal.com_*.atom id type x y z radius
 
 fix NVT all nvt/sphere temp 298.15 298.15 0.2
 
@@ -137,12 +137,12 @@ if "${initial_check} == 1" then &
 
 ## --------------------- Relaxation ---------------------------------
 min_style cg
-minimize 1e-150 1e-150 50000 10000000
-write_data   coord_min_cal.data
+## Attention: perform the minimizzation only if strictly needed
+if "${minimize} == 1" then "minimize 1e-150 1e-150 50000 10000000"
 ## --------------------- Dynamics -----------------------------------
 
 # CBD nanoporosity decrease
-variable initial_nanoporosity equal 0.5
+variable initial_nanoporosity file CBD_nanoporosity_ini
 variable pi equal 3.1416
 variable volume_CBD_i equal v_pi*(v_d_cb^3)/6
 variable volume_CBD_f equal v_volume_CBD_i*(1-(v_nano_dec*v_initial_nanoporosity))
@@ -165,13 +165,13 @@ unfix wall
 include update_sig_CBD
 fix up all wall/gran hertz/history 250000 NULL 30 NULL 15 1 zplane ${z_hi_final1} NULL
 
-# Run for relaxing the CBD position if they are shrunk for the purpouse of removing nanoporosity
+#Run for relaxing the CBD position if they are shrunk for the purpouse of removing nanoporosity
 if "${nano_dec} > 0" then &
 "run 1000000"
 unfix up
 
-# Elastic recovery
-variable relax_time equal 1000000
+variable relax_factor equal v_level_thick+1
+variable relax_time equal 500000*v_relax_factor
 if "${relax} == 1" then &
 "run ${relax_time}"
 

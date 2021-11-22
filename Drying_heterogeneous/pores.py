@@ -269,6 +269,14 @@ C[mask] = 2
 unique, counts = np.unique(C, return_counts=True)
 uqvals = np.asarray((unique, counts)).T
 
+#Recover the new CBD nanoporosity
+path_nanon = r'CBD_nanoporosity_ini'
+with open(path_nanon, 'r') as f:
+    lines = f.readlines()
+    f.close()
+
+nano = float(lines[0])
+
 #CALCULATE NUMBER OF VOXELS OF EACH TYPE
 
 path_new = r'porosity_bulk.out'
@@ -283,7 +291,7 @@ q.write("bulk_pores, CBD, AM \n")
 
 totvol = np.sum(uqvals,axis=0)[1]
 bulk_pore = ((uqvals[0,1])/totvol)*100
-overall_pores = ((uqvals[0,1] + 0.5*uqvals[1,1])/totvol)*100
+overall_pores = ((uqvals[0,1] + nano*uqvals[1,1])/totvol)*100
 CBD_vol = ((uqvals[1,1])/totvol)*100
 AM_vol = ((uqvals[2,1])/totvol)*100
 

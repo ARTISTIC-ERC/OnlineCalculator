@@ -1,12 +1,12 @@
 #!/bin/sh
 #SBATCH --job-name=lammps
-#SBATCH --partition=normal                      # submission queue
-#SBATCH --time=2-0:00:00                        # 1-1 means one day and one hour -> here 20min
+#SBATCH --partition=long                      # submission queue
+#SBATCH --time=10-0:00:00                        # 1-1 means one day and one hour -> here 20min
 #SBATCH --mail-type=END
 ##SBATCH --mail-user=alain.ngandjong@u-picardie.fr       #e-mail notification
 #SBATCH --output=job_seq-%j.out         # if --error is absent, includes alsothe errors
 #SBATCH --nodes=1      # 2 cpus
-#SBATCH --ntasks-per-node=20
+#SBATCH --ntasks-per-node=25
 ##SBATCH --cpus=10
 #SBATCH --mem=15G                                # T-tera, G-giga, M-mega
 
