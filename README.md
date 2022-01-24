@@ -19,7 +19,7 @@ License
 
 This project is licensed under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licence.
 
-IF you use these codes for your own research, please cite the following papers:
+If you use these codes for your own research, please cite the following papers:
 
 https://chemistry-europe.onlinelibrary.wiley.com/doi/full/10.1002/batt.202000049
 
