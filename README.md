@@ -1,5 +1,8 @@
 ![artistic-erc](https://user-images.githubusercontent.com/50483699/86449612-b9113980-bd18-11ea-8ee0-ddd5cf7326a4.png)
 
+THE ARTISTIC Project Online Calculator
+========================================================
+
 These codes allow reproducing the computational workflow available in the "online calculator" section of the ARTISTIC project computational portal (https://www.erc-artistic.eu/computational-portal/) through a user-friendly interface and previous free registration to the platform
 
 The codes allow generating 3D slurry and electrode mesostructures linked to LIB electrode manufacturing processes and they should be run sequentially (first the slurry, then the drying and finally the calendering).
