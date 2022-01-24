@@ -14,5 +14,15 @@ The script* files are specific for running these simulations in the Matrics comp
 
 For more information, the interested readers are referred to the online calculator (https://www.erc-artistic.eu/computational-portal/calculator/online-calculator) and the read me files available for each step (slurry, drying and calendering).
 
+IF you use these codes for your own research, please cite the following papers:
+
+https://chemistry-europe.onlinelibrary.wiley.com/doi/full/10.1002/batt.202000049
+
+https://www.sciencedirect.com/science/article/pii/S240582972100427X
+
+and 
+
+https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/batt.202100324
+
 For any doubt or question please contact:
 alejandro.franco@u-picardie.fr (Professor Alejandro A. Franco, PI of the ARTISTIC project)
