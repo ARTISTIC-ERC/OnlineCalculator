@@ -24,11 +24,11 @@ This project is licensed under the [CC BY-NC-SA 4.0](https://creativecommons.org
 
 If you use these codes for your own research, please cite the following papers:
 
-https://chemistry-europe.onlinelibrary.wiley.com/doi/full/10.1002/batt.202000049
+T. Lombardo, J.B. Hoock, E.N. Primo, A.C. Ngandjong, M. Duquesnoy, A.A. Franco. Accelerated Optimization Methods for Force-Field Parametrization in Battery Electrode Manufacturing Modeling, Batteries & Supercaps 3(8) (2020) 721, https://doi.org/10.1002/batt.202000049.
 
-https://www.sciencedirect.com/science/article/pii/S240582972100427X
+T. Lombardo, A.C. Ngandjong, A. Belhcen, A.A. Franco. Carbon-Binder Migration: A Three-Dimensional Drying Model for Lithium-ion Battery Electrodes, Energy Storage Materials, 43 (2021) 337, https://doi.org/10.1016/j.ensm.2021.09.015.
 
-https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/batt.202100324
+T. Lombardo, F. Caro, A.C. Ngandjong, J.B. Hoock, M. Duquesnoy, J.C. Delepine, A. Ponchelet, S. Doison, A.A. Franco. The ARTISTIC Online Calculator: Exploring the Impact of Li-ion Battery Electrode Manufacturing Parameters Interactively through your Browser, Batteries & Supercaps (2022) https://doi.org/10.1002/batt.202100324.
 
 Contact
 ========================================================
