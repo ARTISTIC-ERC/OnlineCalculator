@@ -15,8 +15,6 @@ The values of the force field parameters reported in the codes are the ones empl
 
 The inputs that the user should specify (if any) should be reported in the associated user_inputs* file.
 
-The script* files are specific for running these simulations in the Matrics computational cluster, but they are function to offer to the user the order in which the codes should be launched.
-
 For more information, the interested readers are referred to the online calculator (https://www.erc-artistic.eu/computational-portal/calculator/online-calculator) and the read me files available for each step (slurry, drying and calendering).
 
 License
