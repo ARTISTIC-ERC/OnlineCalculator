@@ -33,5 +33,5 @@ T. Lombardo, F. Caro, A.C. Ngandjong, J.B. Hoock, M. Duquesnoy, J.C. Delepine, A
 Contact
 ========================================================
 
-For any doubt or question please contact:
+For any question please contact:
 alejandro.franco@u-picardie.fr (Professor Alejandro A. Franco, PI of the ARTISTIC project)
