@@ -22,9 +22,13 @@ License
 
 This project is licensed under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licence.
 
+This project received funding from the European Union’s Horizon 2020 research and innovation program for the funding support through the European Research Council (grant agreement 772873, “ARTISTIC” project, PI: Prof. Alejandro A. Franco).
+
 If you use these codes for your own research, please cite the following papers:
 
 T. Lombardo, J.B. Hoock, E.N. Primo, A.C. Ngandjong, M. Duquesnoy, A.A. Franco. Accelerated Optimization Methods for Force-Field Parametrization in Battery Electrode Manufacturing Modeling, Batteries & Supercaps 3(8) (2020) 721, https://doi.org/10.1002/batt.202000049.
+
+A.C. Ngandjong, T. Lombardo, E.N. Primo, M. Chouchane, A. Shodiev, O. Arcelus, A.A. Franco. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model: Towards a digital twin of Li-Ion battery manufacturing, 485 (2021) 229320, https://doi.org/10.1016/j.jpowsour.2020.229320.
 
 T. Lombardo, A.C. Ngandjong, A. Belhcen, A.A. Franco. Carbon-Binder Migration: A Three-Dimensional Drying Model for Lithium-ion Battery Electrodes, Energy Storage Materials, 43 (2021) 337, https://doi.org/10.1016/j.ensm.2021.09.015.
 
