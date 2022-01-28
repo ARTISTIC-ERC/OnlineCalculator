@@ -22,7 +22,7 @@ License
 
 This project is licensed under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licence.
 
-This project received funding from the European Union’s Horizon 2020 research and innovation program for the funding support through the European Research Council (grant agreement 772873, “ARTISTIC” project, PI: Prof. Alejandro A. Franco).
+This project received funding from the European Union’s Horizon 2020 research and innovation program through the European Research Council (grant agreement 772873, “ARTISTIC” project, PI: Prof. Alejandro A. Franco).
 
 If you use these codes for your own research, please cite the following papers:
 
