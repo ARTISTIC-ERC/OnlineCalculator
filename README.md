@@ -19,6 +19,7 @@ The script* files are specific for running these simulations in the Matrics comp
 
 For more information, the interested readers are referred to the online calculator (https://www.erc-artistic.eu/computational-portal/calculator/online-calculator) and the read me files available for each step (slurry, drying and calendering).
 
+
 License
 ========================================================
 
@@ -31,6 +32,8 @@ https://chemistry-europe.onlinelibrary.wiley.com/doi/full/10.1002/batt.202000049
 https://www.sciencedirect.com/science/article/pii/S240582972100427X
 
 https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/batt.202100324
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5956353.svg)](https://doi.org/10.5281/zenodo.5956353)
 
 Contact
 ========================================================
