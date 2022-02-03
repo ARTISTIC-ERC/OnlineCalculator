@@ -15,8 +15,6 @@ The values of the force field parameters reported in the codes are the ones empl
 
 The inputs that the user should specify (if any) should be reported in the associated user_inputs* file.
 
-The script* files are specific for running these simulations in the Matrics computational cluster, but they are function to offer to the user the order in which the codes should be launched.
-
 For more information, the interested readers are referred to the online calculator (https://www.erc-artistic.eu/computational-portal/calculator/online-calculator) and the read me files available for each step (slurry, drying and calendering).
 
 
@@ -25,18 +23,22 @@ License
 
 This project is licensed under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licence.
 
+This project received funding from the European Union’s Horizon 2020 research and innovation program through the European Research Council (grant agreement 772873, “ARTISTIC” project, PI: Prof. Alejandro A. Franco).
+
 If you use these codes for your own research, please cite the following papers:
 
-https://chemistry-europe.onlinelibrary.wiley.com/doi/full/10.1002/batt.202000049
+T. Lombardo, J.B. Hoock, E.N. Primo, A.C. Ngandjong, M. Duquesnoy, A.A. Franco. Accelerated Optimization Methods for Force-Field Parametrization in Battery Electrode Manufacturing Modeling, Batteries & Supercaps 3(8) (2020) 721, https://doi.org/10.1002/batt.202000049.
 
-https://www.sciencedirect.com/science/article/pii/S240582972100427X
+A.C. Ngandjong, T. Lombardo, E.N. Primo, M. Chouchane, A. Shodiev, O. Arcelus, A.A. Franco. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model: Towards a digital twin of Li-Ion battery manufacturing, J. Power Sources 485 (2021) 229320, https://doi.org/10.1016/j.jpowsour.2020.229320.
 
-https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/batt.202100324
+T. Lombardo, A.C. Ngandjong, A. Belhcen, A.A. Franco. Carbon-Binder Migration: A Three-Dimensional Drying Model for Lithium-ion Battery Electrodes, Energy Storage Materials, 43 (2021) 337, https://doi.org/10.1016/j.ensm.2021.09.015.
+
+T. Lombardo, F. Caro, A.C. Ngandjong, J.B. Hoock, M. Duquesnoy, J.C. Delepine, A. Ponchelet, S. Doison, A.A. Franco. The ARTISTIC Online Calculator: Exploring the Impact of Li-ion Battery Electrode Manufacturing Parameters Interactively through your Browser, Batteries & Supercaps (2022) https://doi.org/10.1002/batt.202100324.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5956353.svg)](https://doi.org/10.5281/zenodo.5956353)
 
 Contact
 ========================================================
 
-For any doubt or question please contact:
+For any question please contact:
 alejandro.franco@u-picardie.fr (Professor Alejandro A. Franco, PI of the ARTISTIC project)
